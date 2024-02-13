@@ -1,0 +1,17 @@
+{% extends 'app_store/base.html' %}
+
+{% block content %}
+  <div>
+    <h1>Личный кабинет</h1>
+    <p>Имя пользователя: {{ user.username }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Дата рождения: {{ user.profile.birthday }}</p>
+    <p>Телефон: {{ user.profile.tel }}</p>
+    <p>Должность: {{ user.profile.position }}</p>
+    {% if user.profile.avatar %}
+    <img src="{{ user.profile.avatar.url }}" width="500px" height="300px">
+    {% else %}
+      <p>No avatar provided.</p>
+    {% endif %}
+  </div>
+{% endblock %}

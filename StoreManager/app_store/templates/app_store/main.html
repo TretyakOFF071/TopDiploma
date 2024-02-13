@@ -1,0 +1,8 @@
+{% extends 'app_store/base.html' %}}
+
+{% block content %}
+    <h2>Main page</h2>
+    {% for i_profile in profiles %}
+        <p>{{i_profile.name}}</p>
+    {% endfor %}
+{% endblock %}
