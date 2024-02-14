@@ -1,0 +1,66 @@
+{% extends 'app_store/base.html' %}
+{% load static %}
+{% block content %}
+<h2>Список товаров</h2>
+<div class="table-div">
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Категория</th>
+                <th>Цена продажи</th>
+                <th>Закупочная цена</th>
+                <th>Описание</th>
+                <th>Картинка</th>
+                <th>Количество</th>
+                <th>Продано</th>
+                <th>Поставщик</th>
+                <th>Флаг активности</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for good in goods %}
+            <tr>
+                <td>{{ good.name }}</td>
+                <td>{{ good.category }}</td>
+                <td>{{ good.selling_price }}</td>
+                <td>{{ good.purchase_price }}</td>
+                <td>{{ good.description }}</td>
+                  {% if good.image %}
+                    <td><img src="{{ good.image.url }}" alt="{{ good.name }}" width="50"></td>
+                {% else %}
+                <td><p>Нет изображения</p></td>
+                  {% endif %}
+                <td>{{ good.quantity }}</td>
+                <td>{{ good.sold_quantity }}</td>
+                <td>{{ good.provider }}</td>
+                <td>{{ good.get_activity_flag_display }}</td>
+                <td>
+                    <button id="edit-good-button" data-good-id="{{ good.id }}">Изменить</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<button id="add-good-button">Добавить товар</button>
+<!-- Модальное окно -->
+<div id="add-good-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Добавить товар</h2>
+    <form id="good-form" method="post" enctype="multipart/form-data" action="{% url 'add_good' %}">
+      {% csrf_token %}
+      {{ good_form.as_p }}
+      <input type="submit" value="Добавить">
+    </form>
+  </div>
+</div>
+
+
+
+<!-- Подключаем jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{% static 'app_store/js/good.js' %}"></script>
+{% endblock %}

@@ -5,7 +5,7 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{user_form.as_p}}
-            {{profile_form.as_p}}
+            {{customer_form.as_p}}
             <button type="submit">Sign up</button>
         </form>
         {% if messages %}

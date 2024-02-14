@@ -5,11 +5,10 @@
     <h1>Личный кабинет</h1>
     <p>Имя пользователя: {{ user.username }}</p>
     <p>Email: {{ user.email }}</p>
-    <p>Дата рождения: {{ user.profile.birthday }}</p>
-    <p>Телефон: {{ user.profile.tel }}</p>
-    <p>Должность: {{ user.profile.position }}</p>
-    {% if user.profile.avatar %}
-    <img src="{{ user.profile.avatar.url }}" width="500px" height="300px">
+    <p>Дата рождения: {{ user.customer.birthday }}</p>
+    <p>Телефон: {{ user.customer.phone }}</p>
+    {% if user.customer.avatar %}
+    <img src="{{ user.customer.avatar.url }}" width="500px" height="300px">
     {% else %}
       <p>No avatar provided.</p>
     {% endif %}
