@@ -1,0 +1,101 @@
+{% extends 'app_store/base.html' %}
+{% load static %}
+{% block links %}
+  <link rel="stylesheet" type="text/css" href="{% static 'app_store/css/style1.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+{% block content %}
+  <h2>Список поставщиков</h2>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProviderModal">
+    Добавить поставщика
+  </button>
+  <div class="tableContainer">
+    <table class="table table-primary table-hover table-bordered text-center">
+      <thead>
+        <tr>
+          <th>Название</th>
+          <th>Контактное лицо</th>
+          <th>Телефон</th>
+          <th>Email</th>
+          <th>Категории</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for provider in providers %}
+          <tr>
+            <td>{{ provider.name }}</td>
+            <td>{{ provider.contact_person }}</td>
+            <td>{{ provider.phone_number }}</td>
+            <td>{{ provider.email }}</td>
+            <td>
+                {% for category in provider.categories.all %}
+                  {{ category.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+            <td>
+             <button type="button" class="btn btn-primary btn-sm" onclick="location.href='{% url 'edit_provider' provider.id %}'">Редактировать</button>
+            <form method="post" action="{% url 'delete_provider' provider.id %}" style="display: inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+            </form>
+          </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="4">Нет поставщиков</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Модальное окно -->
+  <div class="modal fade" id="addProviderModal" tabindex="-1" aria-labelledby="addProviderModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProviderModalLabel">Добавить поставщика</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-body">
+        <div class="addProviderContainer">
+          <form id="provider-form" method="post" action="{% url 'providers_list' %}">
+            {% csrf_token %}
+              <div class="form-group">
+                <p>{{ form.name.label_tag }}</p>
+                <p>{{ form.name }}</p>
+              </div>
+              <div class="form-group">
+                <p>{{ form.contact_person.label_tag }}</p>
+                <p>{{ form.contact_person }}</p>
+              </div>
+              <div class="form-group">
+                <p>{{ form.phone_number.label_tag }}</p>
+                <p>{{ form.phone_number }}</p>
+              </div>
+              <div class="form-group">
+                <p>{{ form.email.label_tag }}</p>
+                <p>{{ form.email }}</p>
+              </div>
+              <div class="form-group">
+                <p>{{ form.categories.label_tag }}</p>
+                <p>{{ form.categories }}</p>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="submit" form="provider-form" class="btn btn-primary">Добавить</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">  </script>
+{% endblock %}

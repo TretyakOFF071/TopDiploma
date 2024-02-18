@@ -1,113 +1,223 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.views import LogoutView, LoginView
-from django.db.models import Avg
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView, ListView
+from django.views import View
 
-from .forms import UserForm, CustomerForm, CartAddForm, GoodForm
-from .models import Customer, Good
-from django.contrib import messages
-
-
-class UserUpdateView(UpdateView):
-    model = User
-    fields = ('username', 'first_name', 'last_name', 'email')
-    template_name = 'app_shop/profile.html'
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.core.cache import cache
+from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm
+from .models import Profile, Provider, Good, GoodCategory
+from .serializers import ProviderSerializer, GoodSerializer, GoodCategorySerializer
 
 
-    def get_success_url(self):
-        return reverse('profile', kwargs={'pk': self.request.user.pk})
-
-
-class MainView(ListView):
-
-    model = Good
-    queryset = Good.objects.select_related('category').defer('quantity', 'activity_flag'
-                                                                     ).filter(quantity__gt=0, activity_flag='a')
-    context_object_name = 'goods'
-    template_name = 'app_store/main.html'
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(MainView, self).get_context_data(**kwargs)
-        context['avg_price'] = Good.objects.only('selling_price').aggregate(avg_price=Avg('selling_price')).get('avg_price')
-        context['add_form'] = CartAddForm()
-        return context
+# Create your views here.
 
 def register_view(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
-        customer_dorm = CustomerForm(request.POST, request.FILES)
+        profile_form = ProfileForm(request.POST)
 
-        if user_form.is_valid() and customer_dorm.is_valid():
+        if user_form.is_valid() and profile_form.is_valid():
             user = user_form.save()
-            birthday = customer_dorm.cleaned_data['birthday']
-            phone = customer_dorm.cleaned_data['phone']
-            avatar = customer_dorm.cleaned_data['avatar']
-            customer = Customer.objects.create(
+            birthday = profile_form.cleaned_data['birthday']
+            phone = profile_form.cleaned_data['phone']
+            profile = Profile.objects.create(
                 user=user,
                 birthday=birthday,
                 phone=phone,
-                avatar=avatar
             )
-            customer.save()
+            profile.save()
 
             username = user_form.cleaned_data['username']
             raw_password = user_form.cleaned_data['password1']
             auth_user = authenticate(username=username, password=raw_password)
             login(request, auth_user)
-            return redirect('main')
+            return redirect('profile')
         else:
             messages.add_message(request, messages.ERROR, 'Invalid fields')
 
     user_form = UserForm()
-    customer_dorm = CustomerForm()
+    profile_form = ProfileForm()
     return render(request, 'app_store/register.html', context={
         'user_form': user_form,
-        'customer_form': customer_dorm
+        'profile_form': profile_form
     })
+
 
 
 class CustomLoginView(LoginView):
     template_name = 'app_store/login.html'
-    next_page = 'main'
+    next_page = 'profile'
 
     def form_valid(self, form):
         response = super(CustomLoginView, self).form_valid(form)
         return response
 
 
-class MyLogoutView(LogoutView):
-    next_page = reverse_lazy('main')
-
-
+class CustomLogoutView(LogoutView):
+    template_name = 'app_store/logout.html'
+    next_page = 'register'
 
 def profile_view(request):
-    profile = get_object_or_404(Customer, user=request.user)
+    profile = get_object_or_404(Profile, user=request.user)
     return render(request, 'app_store/profile.html', context={'profile': profile})
 
 
-class GoodListView(ListView):
-    model = Good
-    template_name = 'good_list.html'  # Путь к вашему шаблону
-    context_object_name = 'goods'
+# ------------------------------------API----------------------------------------------------------------------------
+CACHE_TIME = 60 * 60 * 2
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['good_form'] = GoodForm()
-        return context
+class ProviderAPIView(APIView):
 
-def add_good(request):
+    def get(self, request):
+        data = cache.get_or_set('providers_list', Provider.objects.all(), CACHE_TIME)
+        return JsonResponse(ProviderSerializer(data, many=True).data, safe=False)
+
+    def post(self, request):
+        serializer = ProviderSerializer(data=request.data)
+        if serializer.is_valid():
+            cache.delete('providers_list')
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProviderDetailAPI(APIView):
+
+    def get(self, request, pk):
+        provider = get_object_or_404(Provider, pk=pk)
+        data = cache.get_or_set(f'provider_{pk}', provider, CACHE_TIME)
+        return JsonResponse(ProviderSerializer(data).data, safe=False)
+
+    def put(self, request, pk):
+        provider = get_object_or_404(Provider, pk=pk)
+        serializer = ProviderSerializer(provider, data=request.data)
+        if serializer.is_valid():
+            cache.delete(f'provider_{pk}')
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GoodAPIView(APIView):
+
+    def get(self, request):
+        data = cache.get_or_set('goods_list', Good.objects.all(), CACHE_TIME)
+        return JsonResponse(GoodSerializer(data, many=True).data, safe=False)
+
+    def post(self, request):
+        serializer = GoodSerializer(data=request.data)
+        if serializer.is_valid():
+            cache.delete('goods_list')
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GoodDetailAPI(APIView):
+
+    def get(self, request, pk):
+        good = get_object_or_404(Good, pk=pk)
+        data = cache.get_or_set(f'good_{pk}', good, CACHE_TIME)
+        return JsonResponse(GoodSerializer(data).data, safe=False)
+
+    def put(self, request, pk):
+        good = get_object_or_404(Good, pk=pk)
+        serializer = GoodSerializer(good, data=request.data)
+        if serializer.is_valid():
+            cache.delete(f'good_{pk}')
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# ---------------------------------------------------Views--------------------------------------------------------------
+
+class ProviderListView(View):
+    def get(self, request):
+        providers = Provider.objects.all()
+        form = ProviderForm()
+        return render(request, 'app_store/providers_list.html', {'providers': providers, 'form': form})
+
+    def post(self, request):
+        form = ProviderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('providers_list')  # Перенаправление на страницу со списком поставщиков
+        else:
+            providers = Provider.objects.all()
+            return render(request, 'app_store/providers_list.html', {'providers': providers, 'form': form})
+
+def delete_provider(request, provider_id):
+    provider = get_object_or_404(Provider, pk=provider_id)
     if request.method == 'POST':
+        provider.delete()
+    return redirect('providers_list')
+
+def edit_provider(request, provider_id):
+    provider = get_object_or_404(Provider, pk=provider_id)
+    if request.method == 'POST':
+        form = ProviderForm(request.POST, instance=provider)
+        if form.is_valid():
+            form.save()
+            return redirect('providers_list')
+    else:
+        form = ProviderForm(instance=provider)
+    return render(request, 'app_store/edit_provider.html', {'form': form, 'provider': provider})
+
+
+class GoodCategoryListView(View):
+    def get(self, request):
+        categories = GoodCategory.objects.all()
+        form = GoodCategoryForm()
+        return render(request, 'app_store/categories_list.html', {'categories': categories, 'form': form})
+
+    def post(self, request):
+        form = GoodCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('categories_list')
+        else:
+            categories = GoodCategory.objects.all()
+            return render(request, 'app_store/categories_list.html', {'categories': categories, 'form': form})
+
+def delete_category(request, category_id):
+    category = get_object_or_404(GoodCategory, pk=category_id)
+    if request.method == 'POST':
+        category.delete()
+    return redirect('categories_list')
+
+
+class GoodsListView(View):
+    def get(self, request):
+        goods = Good.objects.all()
+        form = GoodForm()
+        return render(request, 'app_store/goods_list.html', {'goods': goods, 'form': form})
+
+    def post(self, request):
         form = GoodForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Товар успешно добавлен.')
-            return redirect('good_list')  # Замените 'good_list' на имя вашего шаблона списка товаров
-    else:
-        form = GoodForm()
-    return render(request, 'app_store/add_good.html', {'form': form})
+        else:
+            goods = Good.objects.all()
+        return render(request, 'app_store/goods_list.html', {'goods': goods, 'form': form})
 
+def delete_good(request, good_id):
+    good = get_object_or_404(Good, pk=good_id)
+    if request.method == 'POST':
+        good.delete()
+    return redirect('goods_list')
+
+def edit_good(request, good_id):
+    good = get_object_or_404(Good, pk=good_id)
+    if request.method == 'POST':
+        form = GoodForm(request.POST, request.FILES, instance=good)
+        if form.is_valid():
+            form.save()
+            return redirect('goods_list')
+    else:
+        form = GoodForm(instance=good)
+    return render(request, 'app_store/edit_good.html', {'form': form, 'good': good})
 

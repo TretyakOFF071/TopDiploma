@@ -1,17 +1,15 @@
 {% extends 'app_store/base.html' %}
+{% load static %}
 
 {% block content %}
-  <h1>Registration</h1>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{user_form.as_p}}
-            {{customer_form.as_p}}
-            <button type="submit">Sign up</button>
-        </form>
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color:red">{{message}}</p>
-            {% endfor %}
-        {% endif %}
-
+      <h1 class="container mt-3 mb-5">Registration</h1>
+    <div class="container">
+      <form class="form" method="post">
+        {% csrf_token %}
+        {{user_form.as_p}}
+          {{ profile_form.as_p }}
+        <button class="btn btn-primary" type="submit">Sign up</button>
+        <p style="color: red">{{errors}}</p>
+      </form>
+    </div>
 {% endblock %}

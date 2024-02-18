@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 
-from .models import User, Customer, GoodCart, Good
+from .models import User, Profile, Good, GoodCategory, Provider
 from django import forms
 from django.core.validators import RegexValidator
 
@@ -10,31 +10,29 @@ class UserForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email',
                   'password1', 'password2')
 
-class CustomerForm(forms.ModelForm):
+class ProfileForm(forms.ModelForm):
     birthday = forms.DateField(widget=forms.DateInput)
-    avatar = forms.ImageField(widget=forms.FileInput(attrs={'multiple': 'multiple'}), required=False)
     phone = forms.CharField(max_length=11, validators=[
         RegexValidator(regex='^\\+?[0-9]{11}$', message='Некорректный формат номера телефона.')])
 
     class Meta:
-        model = Customer
-        fields = ('birthday', 'phone', 'avatar')
+        model = Profile
+        fields = ('birthday', 'phone')
 
 
 
 class GoodForm(forms.ModelForm):
+
     class Meta:
         model = Good
-        fields = '__all__'
+        exclude = ['sold_quantity']
 
-class EditGoodForm(forms.ModelForm):
+
+class ProviderForm(forms.ModelForm):
     class Meta:
-        model = Good
-        fields = ['name', 'category', 'selling_price', 'purchase_price', 'description', 'image', 'quantity', 'provider', 'activity_flag']
-
-
-class CartAddForm(forms.ModelForm):
-
+        model = Provider
+        fields = ['name', 'contact_person', 'phone_number', 'email', 'categories']
+class GoodCategoryForm(forms.ModelForm):
     class Meta:
-        model = GoodCart
-        fields = ('good_num', )
+        model = GoodCategory
+        fields = ['name']

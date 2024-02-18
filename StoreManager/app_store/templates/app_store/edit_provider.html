@@ -1,0 +1,32 @@
+{% extends 'app_store/base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="editProviderContainer">
+        <h2 >Редактировать поставщика</h2>
+        <form method="post">
+            {% csrf_token %}
+          <div class="form-group">
+            <p>{{ form.name.label_tag }}</p>
+            <p>{{ form.name }}</p>
+          </div>
+          <div class="form-group">
+            <p>{{ form.contact_person.label_tag }}</p>
+            <p>{{ form.contact_person }}</p>
+          </div>
+          <div class="form-group">
+            <p>{{ form.phone_number.label_tag }}</p>
+            <p>{{ form.phone_number }}</p>
+          </div>
+          <div class="form-group">
+            <p>{{ form.email.label_tag }}</p>
+            <p>{{ form.email }}</p>
+          </div>
+          <div class="form-group">
+            <p>{{ form.categories.label_tag }}</p>
+            <p>{{ form.categories }}</p>
+          </div>
+          <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}
