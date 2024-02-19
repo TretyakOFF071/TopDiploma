@@ -7,9 +7,34 @@
 {% endblock %}
 {% block content %}
   <h2>Список поставщиков</h2>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProviderModal">
+<div class="d-grid gap-2 col-6 mx-auto">
+<button type="button" class="btn btn-info btn-lg" data-bs-toggle="modal" data-bs-target="#addProviderModal">
     Добавить поставщика
-  </button>
+    </button>
+<!--  -->
+  <!-- Форма фильтрации по категориям -->
+  <div class="filterForm">
+     <form method="get" class="mb-3">
+      <div class="form-group">
+        <label for="name-filter">Фильтр по названию:</label>
+        <input type="text" class="form-control" id="name-filter" name="name" value="{{ request.GET.name }}">
+      </div>
+      <div class="form-group">
+        <label for="category-filter">Фильтр по категориям:</label>
+        <select style="width: 100px;" class="form-control" id="category-filter" name="category">
+          <option value="">Все категории</option>
+          {% for category in categories %}
+            <option value="{{ category.id }}" {% if category.id == selected_category %}selected{% endif %}>
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </form>
+  </div>
+<!--  -->
+</div>
   <div class="tableContainer">
     <table class="table table-primary table-hover table-bordered text-center">
       <thead>

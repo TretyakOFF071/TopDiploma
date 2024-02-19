@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from django.core.cache import cache
 from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm
 from .models import Profile, Provider, Good, GoodCategory
-from .serializers import ProviderSerializer, GoodSerializer, GoodCategorySerializer
+from .serializers import ProviderSerializer, GoodSerializer
 
 
 # Create your views here.
@@ -138,17 +138,38 @@ class GoodDetailAPI(APIView):
 class ProviderListView(View):
     def get(self, request):
         providers = Provider.objects.all()
+        categories = GoodCategory.objects.all()
+        selected_category = request.GET.get('category')
+        name_filter = request.GET.get('name')
+
+        if selected_category:
+            providers = providers.filter(categories__id=selected_category)
+
+        if name_filter:
+            providers = providers.filter(name__icontains=name_filter)
+
         form = ProviderForm()
-        return render(request, 'app_store/providers_list.html', {'providers': providers, 'form': form})
+        return render(request, 'app_store/providers_list.html', {
+            'providers': providers,
+            'form': form,
+            'categories': categories,
+            'selected_category': selected_category,
+            'name_filter': name_filter,
+        })
 
     def post(self, request):
         form = ProviderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('providers_list')  # Перенаправление на страницу со списком поставщиков
+            return redirect('providers_list')
         else:
             providers = Provider.objects.all()
-            return render(request, 'app_store/providers_list.html', {'providers': providers, 'form': form})
+            categories = GoodCategory.objects.all()
+            return render(request, 'app_store/providers_list.html', {
+                'providers': providers,
+                'form': form,
+                'categories': categories,
+            })
 
 def delete_provider(request, provider_id):
     provider = get_object_or_404(Provider, pk=provider_id)

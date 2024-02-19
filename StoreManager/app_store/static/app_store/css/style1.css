@@ -1,9 +1,17 @@
-.header{
+.header {
     height: 75px;
-    background-color: red;
+    background-color: #a4c7e0;
 }
-.linksDiv{
-    background-color: grey;
+.linksDiv {
+    width: 750px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 32px;
+}
+.linkItem:hover {
+    color: #faa;
+	box-shadow: 0 50px 5px rgba(0, 0, 0, 0.15) inset;
+	transition: 0.3s linear all;
 }
 
 .addСategory {
@@ -54,4 +62,9 @@ td, th{
     text-align: center;
     background-color: #B0E0E6;
     border-radius: 10px;
+}
+.filterForm{
+    margin: 0 auto;
+    width: 500px;
+    background-color: grey;
 }
