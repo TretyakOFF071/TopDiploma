@@ -65,7 +65,7 @@ class Good(models.Model):
     description = models.TextField(verbose_name='описание товара')
     image = models.ImageField(upload_to='goods/',
                               verbose_name='картинка товара',blank=True, null=True)
-    quantity = models.IntegerField(verbose_name='кол-во товара')
+    quantity = models.IntegerField(verbose_name='кол-во товара', null=True)
     sold_quantity = models.IntegerField(default=0, verbose_name='кол-во продано')
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, verbose_name='поставщик')
     activity_choices = [
@@ -95,6 +95,7 @@ class Good(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
 
 
 

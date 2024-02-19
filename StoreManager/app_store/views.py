@@ -5,6 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+from django.views.generic import DetailView
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -142,6 +143,10 @@ class ProviderListView(View):
         selected_category = request.GET.get('category')
         name_filter = request.GET.get('name')
 
+        if 'clear_filters' in request.GET:
+            selected_category = None
+            name_filter = ''
+
         if selected_category:
             providers = providers.filter(categories__id=selected_category)
 
@@ -214,19 +219,54 @@ def delete_category(request, category_id):
 class GoodsListView(View):
     def get(self, request):
         goods = Good.objects.all()
+        categories = GoodCategory.objects.all()
+        selected_category = request.GET.get('category')
+        name_filter = request.GET.get('name')
+        part_number_filter = request.GET.get('part_number')
+        activity_flag = request.GET.get('activity_flag')
+
+        if 'clear_filters' in request.GET:
+            selected_category = None
+            name_filter = ''
+            part_number_filter = ''
+            activity_flag = None
+
+        if selected_category:
+            goods = goods.filter(category__id=selected_category)
+        if name_filter:
+            goods = goods.filter(name__icontains=name_filter)
+        if part_number_filter:
+            goods = goods.filter(part_number__icontains=part_number_filter)
+        if activity_flag:
+            goods = goods.filter(activity_flag=activity_flag)
+
         form = GoodForm()
-        return render(request, 'app_store/goods_list.html', {'goods': goods, 'form': form})
+        return render(request, 'app_store/goods_list.html', {
+            'goods': goods,
+            'form': form,
+            'categories': categories,
+            'selected_category': selected_category,
+            'name_filter': name_filter,
+            'part_number_filter': part_number_filter,
+            'activity_flag': activity_flag,
+        })
 
     def post(self, request):
         form = GoodForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
+            return redirect('goods_list')
         else:
             goods = Good.objects.all()
-        return render(request, 'app_store/goods_list.html', {'goods': goods, 'form': form})
+            categories = GoodCategory.objects.all()
+            return render(request, 'app_store/goods_list.html', {
+                'goods': goods,
+                'form': form,
+                'categories': categories,
+            })
 
 def delete_good(request, good_id):
-    good = get_object_or_404(Good, pk=good_id)
+    good = get_object_or_404(Good, id=good_id)
     if request.method == 'POST':
         good.delete()
     return redirect('goods_list')
@@ -241,4 +281,9 @@ def edit_good(request, good_id):
     else:
         form = GoodForm(instance=good)
     return render(request, 'app_store/edit_good.html', {'form': form, 'good': good})
+
+class GoodDetailView(DetailView):
+    model = Good
+    template_name = 'app_store/good_detail.html'
+    context_object_name = 'good'
 

@@ -13,16 +13,16 @@
 {% block header %}
     <header class="header">
         <div class="d-flex justify-content-around mb-3">
-            <h1><a href="#">Store</a></h1>
+            <h1 style="font-family: Brush Script MT, cursive" ><a class="headerText" href="#">Store</a></h1>
                 <div class="linksDiv">
                     <div class="linkItem">
-                        <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'categories_list' %}">Категории</a>
+                       <a class="headerText" href="{% url 'categories_list' %}">Категории</a>
                     </div>
                     <div class="linkItem">
-                        <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'providers_list' %}">Поставщики</a>
+                        <a class="headerText" href="{% url 'providers_list' %}">Поставщики</a>
                     </div>
                     <div class="linkItem">
-                        <a class="link-offset-2 link-underline link-underline-opacity-0" href="{% url 'goods_list' %}">Товары</a>
+                        <a class="headerText" href="{% url 'goods_list' %}">Товары</a>
                     </div>
                 </div>
             <div class="d-flex justify-content-between align-items-center">
@@ -33,7 +33,7 @@
                     Actions
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" type="button" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" type="button" href="{% url 'profile' %}">Profile</a></li>
                     <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                   </ul>
                 </div>

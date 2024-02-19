@@ -1,12 +1,26 @@
+body{
+    background-color: #a2a8d3
+}
 .header {
     height: 75px;
-    background-color: #a4c7e0;
+    background-color: #113f67;
+}
+.headerText {
+    color: #e7eaf6;
+    text-decoration: none;
 }
 .linksDiv {
-    width: 750px;
+    width: 850px;
     display: flex;
     justify-content: space-between;
     font-size: 32px;
+    color: #e7eaf6;
+}
+.linkItem{
+    margin: 0px;
+    text-align: center;
+    width: 250px;
+    height: 100px;
 }
 .linkItem:hover {
     color: #faa;
@@ -15,13 +29,13 @@
 }
 
 .addСategory {
-    margin: 0 auto;
+    margin-right: 50px;
     display: flex-column;
     width: 250px;
     height: 150px;
     border: 1px solid black;
     text-align: center;
-    background-color: #91d1ff;
+    background-color: #6F94D2;
     border-radius: 10px;
 }
 .editProviderContainer {
@@ -30,28 +44,28 @@
     height: 650px;
     border: 1px solid black;
     text-align: center;
-    background-color: #B0E0E6;
+    background-color: #a2a8d3;
     border-radius: 10px;
 }
 
 .tableContainer{
-    margin: 50px 100px;
-    width: 1700px;
+    margin-top: 100px;
+    width: 1500px;
 }
 .smallTableContainer{
-    margin: 0 auto;
-    width: 500px;
+    width: 700px;
 }
 td, th{
     max-width: 100px;
 }
 .editGoodContainer{
     margin: 0 auto;
+    margin-top: 50px;
     width: 450px;
-    height: 850px;
+    height: 750px;
     border: 1px solid black;
     text-align: center;
-    background-color: #AFEEEE;
+    background-color: #a2a8d3;
     border-radius: 10px;
 }
 .addProviderContainer{
@@ -60,11 +74,13 @@ td, th{
     height: 500px;
     border: 1px solid black;
     text-align: center;
-    background-color: #B0E0E6;
+    background-color: #a2a8d3;
     border-radius: 10px;
 }
 .filterForm{
-    margin: 0 auto;
-    width: 500px;
-    background-color: grey;
+    margin: 50px;
+    width: 200px;
+    text-align: center;
+    background-color: #6F94D2;
+    border-radius: 15px;
 }

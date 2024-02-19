@@ -25,13 +25,14 @@ class GoodForm(forms.ModelForm):
 
     class Meta:
         model = Good
-        exclude = ['sold_quantity']
+        exclude = ['sold_quantity', 'quantity', 'activity_flag']
 
 
 class ProviderForm(forms.ModelForm):
     class Meta:
         model = Provider
         fields = ['name', 'contact_person', 'phone_number', 'email', 'categories']
+
 class GoodCategoryForm(forms.ModelForm):
     class Meta:
         model = GoodCategory
