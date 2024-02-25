@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models import Profile, GoodCategory, Provider, Good
-
-
+from .models import Profile, GoodCategory, Provider, Good, SupplyItem, Supply
 
 
 # Настройка отображения моделей в админке
@@ -20,4 +18,22 @@ class GoodAdmin(admin.ModelAdmin):
             'activity_flag'),
         }),
     ]
+
+
+class ProviderAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone_number', 'contact_person')
+
+class GoodCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+
+class SupplyItemInline(admin.TabularInline):
+    model = SupplyItem
+    extra = 1
+
+class SupplyAdmin(admin.ModelAdmin):
+    inlines = [SupplyItemInline]
+
+admin.site.register(Provider, ProviderAdmin)
+admin.site.register(GoodCategory, GoodCategoryAdmin)
+admin.site.register(Supply, SupplyAdmin)
 admin.site.register(Good, GoodAdmin)

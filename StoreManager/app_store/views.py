@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView, LogoutView
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template.loader import render_to_string
 from django.views import View
 from django.views.generic import DetailView
 
@@ -11,12 +12,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.cache import cache
-from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm
-from .models import Profile, Provider, Good, GoodCategory
+from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm, SupplyForm, \
+    SupplyItemForm, SupplyItemFormSet
+from .models import Profile, Provider, Good, GoodCategory, Supply, SupplyItem
 from .serializers import ProviderSerializer, GoodSerializer
 
 
-# Create your views here.
 
 def register_view(request):
     if request.method == 'POST':
@@ -254,8 +255,12 @@ class GoodsListView(View):
     def post(self, request):
         form = GoodForm(request.POST, request.FILES)
         if form.is_valid():
+            part_number = form.cleaned_data['part_number']
+            if Good.objects.filter(part_number=part_number).exists():
+                messages.error(request, 'Товар с таким артикулом уже существует.')
+                return redirect('goods_list')  # Замените 'goods_list' на URL вашего списка товаров
             form.save()
-            return redirect('goods_list')
+            return redirect('goods_list')  # Замените 'goods_list' на URL вашего списка товаров
         else:
             goods = Good.objects.all()
             categories = GoodCategory.objects.all()
@@ -266,7 +271,7 @@ class GoodsListView(View):
             })
 
 def delete_good(request, good_id):
-    good = get_object_or_404(Good, id=good_id)
+    good = get_object_or_404(Good, pk=good_id)
     if request.method == 'POST':
         good.delete()
     return redirect('goods_list')
@@ -287,3 +292,22 @@ class GoodDetailView(DetailView):
     template_name = 'app_store/good_detail.html'
     context_object_name = 'good'
 
+def create_supply(request):
+    SupplyItemFormSet = inlineformset_factory(Supply, SupplyItem, form=SupplyItemForm, extra=1, can_delete=False)
+    if request.method == 'POST':
+        supply_form = SupplyForm(request.POST)
+        supply_item_formset = SupplyItemFormSet(request.POST)
+        if supply_form.is_valid() and supply_item_formset.is_valid():
+            supply = supply_form.save()
+            for form in supply_item_formset:
+                item = form.save(commit=False)
+                item.supply = supply
+                item.save()
+            return redirect('supply_list')
+    else:
+        supply_form = SupplyForm()
+        supply_item_formset = SupplyItemFormSet()
+    return render(request, 'app_store/create_supply.html', {'supply_form': supply_form, 'supply_item_formset': supply_item_formset})
+def supply_list(request):
+    supplies = Supply.objects.all()
+    return render(request, 'app_store/supply_list.html', {'supplies': supplies})

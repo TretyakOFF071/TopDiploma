@@ -1,0 +1,39 @@
+{% extends 'app_store/base.html' %}
+
+{% block content %}
+  <h2>Create Supply</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ supply_form.as_p }}
+    {{ supply_item_formset.management_form }}
+    {% for form in supply_item_formset %}
+      <div class="supply-item-form">
+        {{ form.as_p }}
+      </div>
+    {% endfor %}
+    <button type="submit">Create Supply</button>
+  </form>
+
+<script>
+  // Добавление динамической возможности добавления новых форм для SupplyItem
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const addItemButton = document.getElementById('add-item-button');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    const formContainer = document.querySelector('.supply-item-form');
+
+    addItemButton.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const newForm = formContainer.cloneNode(true);
+      const formRegex = RegExp(`form-(\\d){1}-`,'g');
+
+      formRegex.lastIndex = formContainer.parentElement.children.length;
+      newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formRegex.lastIndex}-`);
+
+      totalForms.setAttribute('value', `${formRegex.lastIndex + 1}`);
+
+      formContainer.parentElement.appendChild(newForm);
+    });
+  });
+</script>
+{% endblock %}

@@ -6,31 +6,31 @@
         <h2>Редактировать товар</h2>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.name.label_tag }}
                 {{ form.name }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.part_number.label_tag }}
                 {{ form.part_number }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.category.label_tag }}
                 {{ form.category }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.selling_price.label_tag }}
                 {{ form.selling_price }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.purchase_price.label_tag }}
                 {{ form.purchase_price }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group mb-1">
                 {{ form.description.label_tag }}
                 {{ form.description }}
             </div>
-            <div class="form-group mb-3">
+            <div class="form-group">
                 <p>{{ form.image.label_tag }}</p>
                 {{ form.image }}
             </div>

@@ -65,7 +65,7 @@ class Good(models.Model):
     description = models.TextField(verbose_name='описание товара')
     image = models.ImageField(upload_to='goods/',
                               verbose_name='картинка товара',blank=True, null=True)
-    quantity = models.IntegerField(verbose_name='кол-во товара', null=True)
+    quantity = models.IntegerField(verbose_name='кол-во товара', default=0)
     sold_quantity = models.IntegerField(default=0, verbose_name='кол-во продано')
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, verbose_name='поставщик')
     activity_choices = [
@@ -77,12 +77,12 @@ class Good(models.Model):
                                      default='i', verbose_name='флаг активности')
 
     def add_quantity(self, num):
-        Good.objects.select_for_update().only('quantity ').\
-            filter(pk=self.pk).update(quantity=F('quantity ') + num)
+        Good.objects.select_for_update().only('quantity'). \
+            filter(pk=self.pk).update(quantity=F('quantity') + num)
 
     def sub_quantity(self, num):
-        Good.objects.select_for_update().only('quantity ').\
-            filter(pk=self.pk).update(quantity=F('quantity ') - num)
+        Good.objects.select_for_update().only('quantity').\
+            filter(pk=self.pk).update(quantity=F('quantity') - num)
 
     def sell(self, num):
         Good.objects.select_for_update().only('sold_quantity').filter(pk=self.pk).update(sold_quantity=F('sold_quantity') + num)
@@ -97,5 +97,28 @@ class Good(models.Model):
         return f'{self.name}'
 
 
+class Supply(models.Model):
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
+    supply_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+
+        db_table = 'supplies'
+        verbose_name = 'поставка'
+        verbose_name_plural = 'поставки'
+
+    def __str__(self):
+        return f'Поставка от {self.provider} от {self.supply_date}'
+
+class SupplyItem(models.Model):
+    supply = models.ForeignKey(Supply, on_delete=models.CASCADE, related_name='items')
+    good = models.ForeignKey(Good, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def save(self, *args, **kwargs):
+        self.good.add_quantity(self.quantity)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.good} в количестве {self.quantity} шт.'
 

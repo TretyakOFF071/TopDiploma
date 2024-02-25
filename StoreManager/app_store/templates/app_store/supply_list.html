@@ -1,0 +1,22 @@
+{% extends 'app_store/base.html' %}
+{% block content %}
+  <h2>Список поставок</h2>
+  <div class="card-deck">
+    {% for supply in supplies %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Поставщик: {{ supply.provider }}</h5>
+          <p class="card-text"><strong>Дата поставки:</strong> {{ supply.supply_date }}</p>
+          <h6 class="card-subtitle mb-2 text-muted">Товары:</h6>
+          <ul class="list-group list-group-flush">
+            {% for item in supply.items.all %}
+              <li class="list-group-item">{{ item.good }} - {{ item.quantity }} шт.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% empty %}
+      <p>Нет доступных поставок.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

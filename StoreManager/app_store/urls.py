@@ -4,7 +4,7 @@ from django.conf import settings
 
 from .views import register_view, CustomLoginView, CustomLogoutView, profile_view, ProviderAPIView, GoodAPIView, \
     ProviderDetailAPI, GoodDetailAPI, ProviderListView, GoodCategoryListView, delete_provider, edit_provider, \
-    GoodsListView, delete_good, edit_good, delete_category, GoodDetailView
+    GoodsListView, delete_good, edit_good, delete_category, GoodDetailView, create_supply, supply_list
 
 urlpatterns = [
     path('register/', register_view, name='register'),
@@ -24,4 +24,7 @@ urlpatterns = [
     path('delete_good/<int:good_id>/', delete_good, name='delete_good'),
     path('edit_good/<int:good_id>/', edit_good, name='edit_good'),
     path('good/<int:pk>/', GoodDetailView.as_view(), name='good_detail'),
+    path('create_supply/', create_supply, name='create_supply'),
+    path('supply_list/', supply_list, name='supply_list'),
+
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
