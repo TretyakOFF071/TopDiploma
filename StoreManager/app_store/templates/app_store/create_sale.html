@@ -1,0 +1,20 @@
+{% extends 'app_store/base.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Новая продажа</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ sale_form.as_p }}
+    {{ sale_item_formset.management_form }}
+    {% for form in sale_item_formset %}
+      <div class="saleitem-form">
+        {{ form.as_p }}
+      </div>
+    {% endfor %}
+    <button type="submit">Сохранить продажу</button>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+{% endblock %}

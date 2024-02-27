@@ -1,0 +1,28 @@
+{% extends 'app_store/base.html' %}
+
+{% block content %}
+  <h2>Список продаж</h2>
+  <div class="row">
+    {% for sale in sales %}
+      <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+          <div class="card-body">
+            <h5 class="card-title">Продажа #{{ sale.id }}</h5>
+            <p class="card-text">
+              <strong>Пользователь:</strong> {{ sale.user.username }}<br>
+              <strong>Дата и время:</strong> {{ sale.sale_date }}<br>
+              <strong>Товары:</strong>
+              <ul>
+                {% for sold_good in sale.sold_goods.all %}
+                  <li>{{ sold_good.good.name }} - {{ sold_good.quantity }} шт.</li>
+                {% endfor %}
+              </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <p>Нет продаж.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,39 +1,44 @@
 {% extends 'app_store/base.html' %}
+{% load static %}
+
 
 {% block content %}
-  <h2>Create Supply</h2>
-  <form method="post">
+  <h2>Создание поставки</h2>
+<form method="post" id="supply-form">
     {% csrf_token %}
     {{ supply_form.as_p }}
-    {{ supply_item_formset.management_form }}
-    {% for form in supply_item_formset %}
-      <div class="supply-item-form">
-        {{ form.as_p }}
-      </div>
+    <h2>Товары в поставке</h2>
+    <div id="goods-formset">
+   {{ supply_good_formset.management_form }}
+    {% for form in supply_good_formset %}
+        <div class="good-form {% if not forloop.first %}hidden{% endif %}">
+            {{ form.as_p }}
+        </div>
     {% endfor %}
-    <button type="submit">Create Supply</button>
-  </form>
+    </div>
+    <button type="button" id="show-forms">Добавить еще товар</button>
+    <input type="submit" value="Сохранить">
+</form>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  // Добавление динамической возможности добавления новых форм для SupplyItem
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const addItemButton = document.getElementById('add-item-button');
-    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
-    const formContainer = document.querySelector('.supply-item-form');
+$(document).ready(function() {
+    // Скрипт для добавления новых пустых форм
+    var formCount = $('.good-form').length;
+    var emptyForm = $('.good-form:first').clone();
 
-    addItemButton.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      const newForm = formContainer.cloneNode(true);
-      const formRegex = RegExp(`form-(\\d){1}-`,'g');
-
-      formRegex.lastIndex = formContainer.parentElement.children.length;
-      newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formRegex.lastIndex}-`);
-
-      totalForms.setAttribute('value', `${formRegex.lastIndex + 1}`);
-
-      formContainer.parentElement.appendChild(newForm);
+    $('#add-good').click(function() {
+        formCount++;
+        var newForm = emptyForm.clone().find('input, select').val('').end();
+        newForm.find('input[name*="good"]').attr('name', 'form-' + (formCount - 1) + '-good');
+        newForm.find('input[name*="quantity"]').attr('name', 'form-' + (formCount - 1) + '-quantity');
+        newForm.appendTo('#goods-formset');
     });
-  });
+
+    // Скрипт для показа скрытых форм
+    $('#show-forms').click(function() {
+        $('.good-form.hidden:first').removeClass('hidden');
+    });
+});
 </script>
 {% endblock %}

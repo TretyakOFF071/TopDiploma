@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import inlineformset_factory
 
-from .models import User, Profile, Good, GoodCategory, Provider, Supply, SupplyItem
+from .models import User, Profile, Good, GoodCategory, Provider, Supply, Sale, SupplyGood, SaleItem
 from django import forms
 from django.core.validators import RegexValidator
 
@@ -25,7 +25,7 @@ class ProfileForm(forms.ModelForm):
 class GoodForm(forms.ModelForm):
     class Meta:
         model = Good
-        exclude = ['sold_quantity', 'quantity', 'activity_flag']
+        exclude = ['sold_quantity', 'quantity']
         labels = {
             'name': 'Название товара',
             'part_number': 'Артикул',
@@ -34,7 +34,7 @@ class GoodForm(forms.ModelForm):
             'purchase_price': 'Закупочная цена',
             'description': 'Описание товара',
             'image': 'Картинка товара',
-            'provider': 'Поставщик',
+            'manufacturer': 'Производитель',
         }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control',
@@ -51,7 +51,7 @@ class GoodForm(forms.ModelForm):
                                                  'style': 'width: 250px; height: 50px; margin: 0 auto;'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control',
                                                      'style': 'width: 250px; margin: 0 auto;'}),
-            'provider': forms.Select(attrs={'class': 'form-control',
+            'manufacturer': forms.TextInput(attrs={'class': 'form-control',
                                             'style': 'width: 250px; margin: 0 auto;'}),
         }
 
@@ -89,23 +89,14 @@ class GoodCategoryForm(forms.ModelForm):
         model = GoodCategory
         fields = ['name']
 
-
-
 class SupplyForm(forms.ModelForm):
     class Meta:
         model = Supply
         fields = ['provider']
-        labels = {
-            'provider': 'Поставщик'
-        }
-        widgets = {
-            'provider': forms.Select(attrs={'class': 'form-control',
-                                            'style': 'width: 250px; margin: 0 auto;'}),
-        }
 
-class SupplyItemForm(forms.ModelForm):
+class SupplyGoodForm(forms.ModelForm):
     class Meta:
-        model = SupplyItem
+        model = SupplyGood
         fields = ['good', 'quantity']
         labels = {
             'good': 'Товар',
@@ -117,5 +108,56 @@ class SupplyItemForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control',
                                                  'style': 'width: 250px; margin: 0 auto;'}),
         }
+SupplyGoodFormSet = forms.inlineformset_factory(Supply, SupplyGood, form=SupplyGoodForm, extra=5, can_delete=False)
 
-SupplyItemFormSet = inlineformset_factory(Supply, SupplyItem, form=SupplyItemForm, extra=1, can_delete=False)
+class SaleForm(forms.ModelForm):
+    class Meta:
+        model = Sale
+        fields = ['discount', 'payment_method']
+        labels = {
+            'discount': 'Скидка',
+            'payment_method': 'Способ оплаты'
+        }
+        widgets = {
+            'discount': forms.NumberInput(attrs={'class': 'form-control'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.sale_items = []
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.sale_items:
+            raise forms.ValidationError("Не добавлено ни одного товара к продаже.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        sale = super().save(commit=False)
+        if commit:
+            sale.save()
+            for item in self.sale_items:
+                item.sale = sale
+                item.save()
+                item.good.sale(item.quantity)
+        return sale
+
+
+
+class SaleItemForm(forms.ModelForm):
+    class Meta:
+        model = SaleItem
+        fields = ['good', 'quantity']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        good = cleaned_data.get('good')
+        quantity = cleaned_data.get('quantity')
+
+        if good and quantity and good.quantity < quantity:
+            raise forms.ValidationError("Недостаточно товара на складе.")
+
+        return cleaned_data
+
+SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)

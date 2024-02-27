@@ -44,25 +44,18 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="form-group">
-                <label for="activity-filter"><b>Фильтр по флагу активности:</b></label>
-                <select style="margin: 0 auto; width: 150px;" class="form-control" id="activity-filter" name="activity_flag">
-                    <option value="">Все</option>
-                    <option value="a" {% if activity_flag == 'a' %}selected{% endif %}>Активный</option>
-                    <option value="i" {% if activity_flag == 'i' %}selected{% endif %}>Стоп-лист</option>
-                </select>
-            </div>
             <button style="width: 110px;" type="submit" class="btn btn-primary mt-2 mb-3">Применить</button>
             <button style="width: 110px;" class="btn btn-danger mt-2 mb-3" type="submit" name="clear_filters">Очистить</button>
         </form>
        </div>
+
 
       <div class="tableContainer">
           <div class="d-grid gap-2 col-6 mx-auto">
               <button type="button" class="btn btn-info btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#addGoodModal">Добавить товар</button>
           </div>
         <table class="table table-secondary table-hover table-bordered text-center">
-          <thead>
+          <thead class="table-primary">
             <tr>
               <th>ID</th>
               <th>Название</th>
@@ -73,8 +66,7 @@
               <th>Изображение</th>
               <th>Количество</th>
               <th>Продано</th>
-              <th>Поставщик</th>
-              <th>Флаг активности</th>
+              <th>Производитель</th>
               <th>Действия</th>
             </tr>
           </thead>
@@ -90,15 +82,14 @@
                 <td>{% if good.image %}<img src="{{ good.image.url }}" alt="{{ good.name }}" width="50">{% endif %}</td>
                 <td>{{ good.quantity }}</td>
                 <td>{{ good.sold_quantity }}</td>
-                <td>{{ good.provider }}</td>
-                <td>{{ good.get_activity_flag_display }}</td>
+                <td>{{ good.manufacturer }}</td>
                 <td>
                 <a href="{% url 'good_detail' good.id %}" class="btn btn-info btn-sm" title="Подробнее">
                     <i class="fas fa-info-circle"></i>
                 </a>
-                 <button type="button" class="btn btn-primary btn-sm" onclick="location.href='/edit_good/1/'" title="Редактировать">
+                <button type="button" class="btn btn-primary btn-sm" onclick="location.href='{% url 'edit_good' good.id %}'" title="Редактировать">
                     <i class="fas fa-edit"></i>
-                </button>
+                  </button>
                 <form method="post" action="{% url 'delete_good' good.id %}" style="display: inline;">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-danger btn-sm" title="Удалить">
@@ -113,10 +104,21 @@
               </tr>
             {% endfor %}
           </tbody>
+            <tfoot class="table-primary">
+                 <tr>
+                    <td colspan="10" class="text-right">Общая закупочная цена:</td>
+                     <td> <strong>{{ total_purchase_price }} RUB. </strong></td>
+                </tr>
+                <tr>
+                    <td colspan="10" class="text-right">Общая цена продажи:</td>
+                    <td> <strong>{{ total_selling_price }} RUB.</strong></td>
+                </tr>
+            </tfoot>
         </table>
       </div>
     </div>
 <!---->
+
 
   <!-- Модальное окно -->
   <div class="modal fade" id="addGoodModal" tabindex="-1" role="dialog" aria-labelledby="addGoodModalLabel" aria-hidden="true">
@@ -148,7 +150,7 @@
               </div>
               <div class="form-group mb-1">
                   {{ form.purchase_price.label_tag }}
-                  {{ form.purchase_price }}
+                  {{ form.purchase_price }} RUB.
               </div>
               <div class="form-group mb-1">
                   {{ form.description.label_tag }}
@@ -159,8 +161,8 @@
                   {{ form.image }}
               </div>
               <div class="form-group mb-1">
-                  {{ form.provider.label_tag }}
-                  {{ form.provider }}
+                  {{ form.manufacturer.label_tag }}
+                  {{ form.manufacturer }}
               </div>
             </form>
           </div>

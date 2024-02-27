@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {{ form.media }}
     <meta charset="UTF-8">
     <title>Title</title>
     {% block links %}
@@ -16,11 +17,20 @@
         <div class="d-flex justify-content-around mb-3">
             <h1 style="font-family: Brush Script MT, cursive" ><a class="headerText" href="#">Store</a></h1>
                 <div class="linksDiv">
+                    <div class="linkItem dropdown">
+                        <a class="headerText dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Продажи
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="{% url 'sales_list' %}">Список продаж</a></li>
+                            <li><a class="dropdown-item" href="{% url 'create_sale' %}">Создание продажи</a></li>
+                        </ul>
+                    </div>
                     <div class="linkItem">
                        <a class="headerText" href="{% url 'categories_list' %}">Категории</a>
                     </div>
                     <div class="linkItem dropdown">
-                        <a class="headerText dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="headerText dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false">
                             Поставки
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">

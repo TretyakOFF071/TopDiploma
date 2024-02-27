@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from django.db import models
-from django.db.models import F
+from django.db import models, transaction
+from django.db.models import F, Sum
 
 
 class Profile(models.Model):
@@ -60,32 +60,24 @@ class Good(models.Model):
                                  verbose_name='категория',
                                  null=True)
 
-    selling_price = models.FloatField(verbose_name='цена продажи')
-    purchase_price = models.FloatField(verbose_name='закупочная цена')
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2,verbose_name='цена продажи')
+    purchase_price = models.DecimalField(max_digits=10, decimal_places=2,verbose_name='закупочная цена')
     description = models.TextField(verbose_name='описание товара')
     image = models.ImageField(upload_to='goods/',
                               verbose_name='картинка товара',blank=True, null=True)
     quantity = models.IntegerField(verbose_name='кол-во товара', default=0)
     sold_quantity = models.IntegerField(default=0, verbose_name='кол-во продано')
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, verbose_name='поставщик')
-    activity_choices = [
-        ('a', 'Aктивный'),
-        ('i', 'Стоп-лист')
-    ]
+    manufacturer = models.CharField(max_length=30, verbose_name='производитель')
 
-    activity_flag = models.CharField(choices=activity_choices, max_length=1,
-                                     default='i', verbose_name='флаг активности')
+    def new_supply(self, num):
+        self.quantity = F('quantity') + num
+        self.save(update_fields=['quantity'])
 
-    def add_quantity(self, num):
-        Good.objects.select_for_update().only('quantity'). \
-            filter(pk=self.pk).update(quantity=F('quantity') + num)
+    def sale(self, num):
+        self.quantity = F('quantity') - num
+        self.sold_quantity = F('sold_quantity') + num
+        self.save(update_fields=['quantity', 'sold_quantity'])
 
-    def sub_quantity(self, num):
-        Good.objects.select_for_update().only('quantity').\
-            filter(pk=self.pk).update(quantity=F('quantity') - num)
-
-    def sell(self, num):
-        Good.objects.select_for_update().only('sold_quantity').filter(pk=self.pk).update(sold_quantity=F('sold_quantity') + num)
 
     class Meta:
 
@@ -97,28 +89,78 @@ class Good(models.Model):
         return f'{self.name}'
 
 
+
 class Supply(models.Model):
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
     supply_date = models.DateTimeField(auto_now_add=True)
+    goods = models.ManyToManyField('Good', through='SupplyGood')
+    provider = models.ForeignKey('Provider', on_delete=models.CASCADE, verbose_name='поставщик')
 
     class Meta:
-
         db_table = 'supplies'
         verbose_name = 'поставка'
         verbose_name_plural = 'поставки'
 
     def __str__(self):
-        return f'Поставка от {self.provider} от {self.supply_date}'
+        return f'Поставка от {self.supply_date}'
 
-class SupplyItem(models.Model):
-    supply = models.ForeignKey(Supply, on_delete=models.CASCADE, related_name='items')
-    good = models.ForeignKey(Good, on_delete=models.CASCADE)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        for supply_good in self.supplygood_set.all():
+            supply_good.good.new_supply(supply_good.quantity)
+            supply_good.good.save()
+
+    def total_cost(self):
+        return sum(good.total_cost() for good in self.supplygood_set.all())
+
+class SupplyGood(models.Model):
+    supply = models.ForeignKey(Supply, on_delete=models.CASCADE)
+    good = models.ForeignKey('Good', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
 
     def save(self, *args, **kwargs):
-        self.good.add_quantity(self.quantity)
         super().save(*args, **kwargs)
+        self.good.new_supply(self.quantity)
+
+    def total_cost(self):
+        return self.good.purchase_price * self.quantity
+
+class Sale(models.Model):
+    sale_date = models.DateTimeField(auto_now_add=True, verbose_name='дата продажи')
+    goods = models.ManyToManyField('Good', through='SaleItem')
+    discount = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name='скидка (в процентах)')
+    payment_method = models.CharField(max_length=50, default='наличные', choices=[('наличные', 'наличные'), ('карта', 'карта')], verbose_name='способ оплаты')
+    final_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='итоговая стоимость', default=0)
+
+    class Meta:
+        db_table = 'sales'
+        verbose_name = 'продажа'
+        verbose_name_plural = 'продажи'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.final_cost = self.total_cost()
+        self.save()
+
+    def total_cost(self):
+        total = self.sale_items.aggregate(total=Sum(F('price') * F('quantity')))['total'] or 0
+        total_with_discount = total * (100 - self.discount) / 100
+        return total_with_discount
+
+
+class SaleItem(models.Model):
+    sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name='sale_items')
+    good = models.ForeignKey('Good', on_delete=models.CASCADE, verbose_name='товар')
+    quantity = models.PositiveIntegerField(verbose_name='количество')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='цена')
+
+    class Meta:
+        db_table = 'sold_goods'
+        verbose_name = 'проданный товар'
+        verbose_name_plural = 'проданные товары'
 
     def __str__(self):
-        return f'{self.good} в количестве {self.quantity} шт.'
+        return f'{self.good.name} ({self.quantity} шт.)'
 
+    def save(self, *args, **kwargs):
+        self.price = self.good.selling_price
+        super().save(*args, **kwargs)
