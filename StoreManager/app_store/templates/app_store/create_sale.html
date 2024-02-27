@@ -1,20 +1,58 @@
 {% extends 'app_store/base.html' %}
 {% load static %}
 
+
 {% block content %}
-  <h2>Новая продажа</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ sale_form.as_p }}
-    {{ sale_item_formset.management_form }}
-    {% for form in sale_item_formset %}
-      <div class="saleitem-form">
-        {{ form.as_p }}
+  <h2>Создание продажи</h2>
+  <form method="post" id="sale-form">
+    <div class="saleDiv">
+      <div class="goodChoice">
+        {% csrf_token %}
+        <h4>Выбор товаров</h4>
+        <div class="saleItems" id="sale-items-formset">
+          {{ sale_item_formset.management_form }}
+          {% for form in sale_item_formset %}
+            <div class="sale-item-form {% if not forloop.first %}hidden{% endif %}">
+                  <div class="form-group">
+                      <span style="font-size: 20px;">{{ form.good.label_tag }}</span>
+                    {{ form.good }}
+                  </div>
+                    <div class="form-group">
+                        <span style="font-size: 20px;">{{ form.quantity.label_tag }}</span>
+                     {{ form.quantity }}
+                    </div>
+              <div class="price-display"></div>
+            </div>
+          {% endfor %}
+        </div>
+        <div class="d-grid gap-2 col-6 mx-auto mt-4 mb-3">
+           <button class="btn btn-light" type="button" id="add-item">Добавить еще товар</button>
+        </div>
       </div>
-    {% endfor %}
-    <button type="submit">Сохранить продажу</button>
+      <div class="payMenu">
+        <h4>Меню оплаты</h4>
+          <div class="saleItems">
+              <div class="form-group">
+                <span style="font-size: 20px;">{{ sale_form.discount.label_tag }}</span>
+                  {{ sale_form.discount }}
+              </div>
+              <div class="form-group mt-1">
+                  <span style="font-size: 20px;">{{ sale_form.payment_method.label_tag }}</span>
+                  {{ sale_form.payment_method }}
+              </div>
+              <div id="total-price-display"><h3>Общая сумма: 0.00</h3></div>
+              <div id="discounted-price-display"><h4>Общая сумма с учетом скидки: 0.00</h4></div>
+              </div>
+              <div class="d-grid gap-2 col-6 mx-auto mb-3 mt-3">
+                <input class="btn btn-light" type="submit" value="Сохранить">
+              </div>
+        </div>
+    </div>
   </form>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
 
+{% block scripts %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="{% static 'app_store/js/sales.js' %}"></script>
 {% endblock %}

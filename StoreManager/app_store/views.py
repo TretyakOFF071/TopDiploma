@@ -1,10 +1,12 @@
+from decimal import Decimal
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db import transaction
 from django.db.models import Sum, F
-from django.forms import inlineformset_factory, formset_factory
+from django.forms import inlineformset_factory, formset_factory, modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -17,8 +19,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.cache import cache
 from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm, SupplyForm, \
-    SaleForm, SupplyGoodFormSet, SaleItemFormSet
-from .models import Profile, Provider, Good, GoodCategory, Supply, Sale
+    SaleForm, SupplyGoodFormSet, SaleItemFormSet, SaleItemForm
+from .models import Profile, Provider, Good, GoodCategory, Supply, Sale, SaleItem
 from .serializers import ProviderSerializer, GoodSerializer
 
 
@@ -319,25 +321,34 @@ def supply_list(request):
 
 
 def create_sale(request):
+    SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)
     if request.method == 'POST':
         sale_form = SaleForm(request.POST)
         sale_item_formset = SaleItemFormSet(request.POST)
         if sale_form.is_valid() and sale_item_formset.is_valid():
             sale = sale_form.save()
-            sale_items = sale_item_formset.save(commit=False)
-            for item in sale_items:
-                item.sale = sale
-                item.save()
-            return redirect('sales_detail', pk=sale.pk)
+            instances = sale_item_formset.save(commit=False)
+            for instance in instances:
+                instance.sale = sale
+                instance.save()
+            return redirect('sales_list')
     else:
         sale_form = SaleForm()
         sale_item_formset = SaleItemFormSet()
-    return render(request, 'app_store/create_sale.html', {
-        'sale_form': sale_form,
-        'sale_item_formset': sale_item_formset,
-    })
+    return render(request, 'app_store/create_sale.html', {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
 
-
+def get_good_price(request, good_id):
+    try:
+        good = Good.objects.get(id=good_id)
+        return JsonResponse({'price': float(good.selling_price)})
+    except Good.DoesNotExist:
+        return JsonResponse({'error': 'Товар не найден'}, status=404)
 def sales_list(request):
     sales = Sale.objects.all()
+    for sale in sales:
+        # Вычисление финальной стоимости с учетом скидки
+        final_cost = sale.final_cost_with_discount()
+        # Обновление поля final_cost и сохранение объекта Sale
+        sale.final_cost = final_cost
+        sale.save()
     return render(request, 'app_store/sales_list.html', {'sales': sales})

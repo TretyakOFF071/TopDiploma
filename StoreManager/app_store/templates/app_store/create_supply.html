@@ -3,27 +3,30 @@
 
 
 {% block content %}
-  <h2>Создание поставки</h2>
-<form method="post" id="supply-form">
-    {% csrf_token %}
-    {{ supply_form.as_p }}
-    <h2>Товары в поставке</h2>
-    <div id="goods-formset">
-   {{ supply_good_formset.management_form }}
-    {% for form in supply_good_formset %}
-        <div class="good-form {% if not forloop.first %}hidden{% endif %}">
-            {{ form.as_p }}
-        </div>
-    {% endfor %}
+    <h2>Создание поставки</h2>
+    <div class="supplyDiv">
+        <form method="post" id="supply-form">
+            {% csrf_token %}
+            <div class="supplyFormD">
+                {{ supply_form.as_p }}
+                <h2>Товары в поставке</h2>
+                <div id="goods-formset">
+               {{ supply_good_formset.management_form }}
+                {% for form in supply_good_formset %}
+                    <div class="good-form {% if not forloop.first %}hidden{% endif %}">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
+                </div>
+                    <button type="button" id="show-forms">Добавить еще товар</button>
+                    <input type="submit" value="Сохранить">
+            </div>
+        </form>
     </div>
-    <button type="button" id="show-forms">Добавить еще товар</button>
-    <input type="submit" value="Сохранить">
-</form>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    // Скрипт для добавления новых пустых форм
     var formCount = $('.good-form').length;
     var emptyForm = $('.good-form:first').clone();
 
@@ -35,7 +38,6 @@ $(document).ready(function() {
         newForm.appendTo('#goods-formset');
     });
 
-    // Скрипт для показа скрытых форм
     $('#show-forms').click(function() {
         $('.good-form.hidden:first').removeClass('hidden');
     });

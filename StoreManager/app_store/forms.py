@@ -93,6 +93,14 @@ class SupplyForm(forms.ModelForm):
     class Meta:
         model = Supply
         fields = ['provider']
+        labels = {
+            'provider': 'Поставщик'
+        }
+        widgets = {
+            'provider': forms.Select(attrs={'class': 'form-control',
+                                        'style': 'width: 250px; margin: 0 auto;'})
+        }
+
 
 class SupplyGoodForm(forms.ModelForm):
     class Meta:
@@ -119,45 +127,18 @@ class SaleForm(forms.ModelForm):
             'payment_method': 'Способ оплаты'
         }
         widgets = {
-            'discount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'payment_method': forms.Select(attrs={'class': 'form-control'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'payment_method': forms.Select(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.sale_items = []
-
-    def clean(self):
-        cleaned_data = super().clean()
-        if not self.sale_items:
-            raise forms.ValidationError("Не добавлено ни одного товара к продаже.")
-        return cleaned_data
-
-    def save(self, commit=True):
-        sale = super().save(commit=False)
-        if commit:
-            sale.save()
-            for item in self.sale_items:
-                item.sale = sale
-                item.save()
-                item.good.sale(item.quantity)
-        return sale
-
-
-
 class SaleItemForm(forms.ModelForm):
+
     class Meta:
         model = SaleItem
         fields = ['good', 'quantity']
+        widgets = {
+            'good': forms.Select(attrs={'class': 'form-control', 'style': 'width: 250px;  margin: 0 auto;'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+        }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        good = cleaned_data.get('good')
-        quantity = cleaned_data.get('quantity')
-
-        if good and quantity and good.quantity < quantity:
-            raise forms.ValidationError("Недостаточно товара на складе.")
-
-        return cleaned_data
-
-SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)
+SaleItemFormSet = forms.inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)

@@ -73,7 +73,7 @@ class Good(models.Model):
         self.quantity = F('quantity') + num
         self.save(update_fields=['quantity'])
 
-    def sale(self, num):
+    def make_sale(self, num):
         self.quantity = F('quantity') - num
         self.sold_quantity = F('sold_quantity') + num
         self.save(update_fields=['quantity', 'sold_quantity'])
@@ -125,34 +125,45 @@ class SupplyGood(models.Model):
         return self.good.purchase_price * self.quantity
 
 class Sale(models.Model):
-    sale_date = models.DateTimeField(auto_now_add=True, verbose_name='дата продажи')
     goods = models.ManyToManyField('Good', through='SaleItem')
+    sale_date = models.DateTimeField(auto_now_add=True, verbose_name='дата продажи')
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0, verbose_name='скидка (в процентах)')
-    payment_method = models.CharField(max_length=50, default='наличные', choices=[('наличные', 'наличные'), ('карта', 'карта')], verbose_name='способ оплаты')
+    payment_method = models.CharField(max_length=50, default='Наличные', choices=[('Наличные', 'Наличные'), ('Карта', 'Карта')], verbose_name='способ оплаты')
     final_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='итоговая стоимость', default=0)
 
+    def total_cost(self):
+        return sum(item.total_cost() for item in self.saleitem_set.all())
+
+    # Метод для вычисления финальной стоимости с учетом скидки
+    def final_cost_with_discount(self):
+        return self.total_cost() * (1 - self.discount / 100)
+
+    # Переопределение метода save для автоматического вычисления и сохранения финальной стоимости
+    def save(self, *args, **kwargs):
+        # Вычисление финальной стоимости с учетом скидки
+        self.final_cost = self.final_cost_with_discount()
+        super().save(*args, **kwargs)
     class Meta:
         db_table = 'sales'
         verbose_name = 'продажа'
         verbose_name_plural = 'продажи'
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.final_cost = self.total_cost()
-        self.save()
+    def __str__(self):
+        return f'Продажа от {self.sale_date}'
 
-    def total_cost(self):
-        total = self.sale_items.aggregate(total=Sum(F('price') * F('quantity')))['total'] or 0
-        total_with_discount = total * (100 - self.discount) / 100
-        return total_with_discount
 
 
 class SaleItem(models.Model):
-    sale = models.ForeignKey(Sale, on_delete=models.CASCADE, related_name='sale_items')
+    sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
     good = models.ForeignKey('Good', on_delete=models.CASCADE, verbose_name='товар')
     quantity = models.PositiveIntegerField(verbose_name='количество')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='цена')
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.good.make_sale(self.quantity)
+
+    def total_cost(self):
+        return self.good.selling_price * self.quantity
     class Meta:
         db_table = 'sold_goods'
         verbose_name = 'проданный товар'
@@ -160,7 +171,3 @@ class SaleItem(models.Model):
 
     def __str__(self):
         return f'{self.good.name} ({self.quantity} шт.)'
-
-    def save(self, *args, **kwargs):
-        self.price = self.good.selling_price
-        super().save(*args, **kwargs)

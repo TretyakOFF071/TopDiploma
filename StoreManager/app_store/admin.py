@@ -4,9 +4,9 @@ from .models import Profile, GoodCategory, Provider, Good, Supply, SaleItem, Sal
 
 class GoodAdmin(admin.ModelAdmin):
     model = Good
-    list_display = ['name', 'category', 'selling_price', 'purchase_price', 'description', 'image', 'quantity', 'manufacturer']
+    list_display = ['name', 'category', 'selling_price', 'purchase_price', 'description', 'image', 'quantity', 'sold_quantity', 'manufacturer']
     list_filter = ['category', 'manufacturer']
-    fields = ['name', 'category', 'selling_price', 'purchase_price', 'description', 'image', 'quantity', 'manufacturer']
+    fields = ['name', 'category', 'selling_price', 'purchase_price', 'description', 'image', 'quantity', 'manufacturer', 'sold_quantity']
 
 
 class ProviderAdmin(admin.ModelAdmin):
@@ -34,7 +34,7 @@ class SaleAdmin(admin.ModelAdmin):
     readonly_fields = ('final_cost',)
 
 class SaleItemAdmin(admin.ModelAdmin):
-    list_display = ('sale', 'good', 'quantity', 'price')
+    list_display = ('sale', 'good', 'quantity')
 
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(GoodCategory, GoodCategoryAdmin)
