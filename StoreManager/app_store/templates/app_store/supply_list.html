@@ -1,0 +1,32 @@
+{% extends 'app_store/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h1>Список всех поставок</h1>
+    <div class="row">
+        {% for supply in supplies %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Поставка #{{ supply.id }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Дата поставки: {{ supply.supply_date }}</h6>
+                    <p class="card-text">
+                        <ul class="list-group list-group-flush">
+                            {% for good in supply.supplygood_set.all %}
+                            <li class="list-group-item">
+                                Товар: {{ good.good.name }}<br>
+                                Количество: {{ good.quantity }}<br>
+                                Закупочная Стоимость: {{ good.total_cost }} RUB.
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                    <p class="card-text">
+                        <strong>Общая закупочная стоимость товаров:</strong> {{ supply.total_cost }} RUB.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,9 +1,7 @@
-body{
-    background-color: #a2a8d3
-}
 .header {
     height: 75px;
     background-color: #113f67;
+    margin-bottom: 30px;
 }
 .headerText {
     color: #e7eaf6;
@@ -49,7 +47,6 @@ body{
 }
 
 .tableContainer{
-    margin-top: 100px;
     width: 1500px;
 }
 .smallTableContainer{
@@ -57,6 +54,16 @@ body{
 }
 td, th{
     max-width: 100px;
+}
+
+.pricesDiv{
+    margin: 0 auto;
+    margin-bottom: 10px;
+    padding: 20px;
+    width: 350px;
+    height: 250px;
+    background-color: #8ecae6;
+    border: 2px solid black;
 }
 .editGoodContainer{
     margin: 0 auto;
@@ -71,7 +78,7 @@ td, th{
 .addProviderContainer{
     margin: 0 auto;
     width: 450px;
-    height: 500px;
+    height: 600px;
     border: 1px solid black;
     text-align: center;
     background-color: #a2a8d3;
@@ -83,4 +90,46 @@ td, th{
     text-align: center;
     background-color: #6F94D2;
     border-radius: 15px;
+}
+
+.saleDiv{
+    display: flex;
+    width: 1800px;
+    margin: 50px;
+    padding: 20px;
+    background-color: #113f67;
+    border-radius: 10px;
+}
+.supplyDiv{
+    margin: 0 auto;
+    width: 650px;
+    background-color:  #6F94D2;
+    text-align: center;
+    border-radius: 10px;
+
+}
+.goodChoice{
+    margin-right: 50px;
+    width: 850px;
+    background-color: #b1cefa;
+    text-align: center;
+    border-radius: 10px;
+}
+.saleItems{
+    margin: 0 auto;
+    padding: 20px;
+    width: 750px;
+    background-color: #6F94D2;
+    text-align: center;
+    border-radius: 10px;
+}
+.payMenu{
+    width: 850px;
+    background-color: #B1cefa;
+    text-align: center;
+    border-radius: 10px;
+
+}
+.hidden {
+    display: none;
 }

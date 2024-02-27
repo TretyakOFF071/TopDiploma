@@ -1,0 +1,37 @@
+{% extends 'app_store/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Список продаж</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for sale in sales %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Продажа №{{ sale.id }}</h5>
+                    <p class="card-text">
+                        <strong>Дата:</strong> {{ sale.date }}<br>
+                        <strong>Скидка:</strong> {{ sale.discount }} %<br>
+                        <strong>Способ оплаты:</strong> {{ sale.get_payment_method_display }}
+                    </p>
+                    <h6>Товары в продаже:</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for item in sale.saleitem_set.all %}
+                        <li class="list-group-item">
+                            {{ item.good.name }} - {{ item.quantity }} шт.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <h6>Финальная стоимость с учетом скидки:</h6>
+                    <p class="card-text">{{ sale.final_cost|floatformat:2 }} руб.</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-md-12">
+            <p>Нет продаж.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

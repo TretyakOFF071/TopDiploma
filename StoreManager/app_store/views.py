@@ -1,22 +1,29 @@
+from decimal import Decimal
+
 from django.contrib import messages
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
+from django.db import transaction
+from django.db.models import Sum, F
+from django.forms import inlineformset_factory, formset_factory, modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView, ListView, FormView
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.cache import cache
-from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm
-from .models import Profile, Provider, Good, GoodCategory
+from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm, SupplyForm, \
+    SaleForm, SupplyGoodFormSet, SaleItemFormSet, SaleItemForm
+from .models import Profile, Provider, Good, GoodCategory, Supply, Sale, SaleItem
 from .serializers import ProviderSerializer, GoodSerializer
 
 
-# Create your views here.
 
 def register_view(request):
     if request.method == 'POST':
@@ -223,13 +230,11 @@ class GoodsListView(View):
         selected_category = request.GET.get('category')
         name_filter = request.GET.get('name')
         part_number_filter = request.GET.get('part_number')
-        activity_flag = request.GET.get('activity_flag')
 
         if 'clear_filters' in request.GET:
             selected_category = None
             name_filter = ''
             part_number_filter = ''
-            activity_flag = None
 
         if selected_category:
             goods = goods.filter(category__id=selected_category)
@@ -237,9 +242,9 @@ class GoodsListView(View):
             goods = goods.filter(name__icontains=name_filter)
         if part_number_filter:
             goods = goods.filter(part_number__icontains=part_number_filter)
-        if activity_flag:
-            goods = goods.filter(activity_flag=activity_flag)
 
+        total_selling_price = goods.aggregate(total=Sum(F('selling_price') * F('quantity')))['total'] or 0
+        total_purchase_price = goods.aggregate(total=Sum(F('purchase_price') * F('quantity')))['total'] or 0
         form = GoodForm()
         return render(request, 'app_store/goods_list.html', {
             'goods': goods,
@@ -248,12 +253,17 @@ class GoodsListView(View):
             'selected_category': selected_category,
             'name_filter': name_filter,
             'part_number_filter': part_number_filter,
-            'activity_flag': activity_flag,
+            'total_purchase_price': total_purchase_price,
+            'total_selling_price': total_selling_price
         })
 
     def post(self, request):
         form = GoodForm(request.POST, request.FILES)
         if form.is_valid():
+            part_number = form.cleaned_data['part_number']
+            if Good.objects.filter(part_number=part_number).exists():
+                messages.error(request, 'Товар с таким артикулом уже существует.')
+                return redirect('goods_list')
             form.save()
             return redirect('goods_list')
         else:
@@ -266,7 +276,7 @@ class GoodsListView(View):
             })
 
 def delete_good(request, good_id):
-    good = get_object_or_404(Good, id=good_id)
+    good = get_object_or_404(Good, pk=good_id)
     if request.method == 'POST':
         good.delete()
     return redirect('goods_list')
@@ -287,3 +297,58 @@ class GoodDetailView(DetailView):
     template_name = 'app_store/good_detail.html'
     context_object_name = 'good'
 
+
+def create_supply(request):
+    if request.method == 'POST':
+        supply_form = SupplyForm(request.POST)
+        supply_good_formset = SupplyGoodFormSet(request.POST)
+        if supply_form.is_valid() and supply_good_formset.is_valid():
+            supply = supply_form.save()
+            instances = supply_good_formset.save(commit=False)
+            for instance in instances:
+                instance.supply = supply
+                instance.save()
+            return redirect('supply_list')
+    else:
+        supply_form = SupplyForm()
+        supply_good_formset = SupplyGoodFormSet()
+    return render(request, 'app_store/create_supply.html', {'supply_form': supply_form, 'supply_good_formset': supply_good_formset})
+
+def supply_list(request):
+    supplies = Supply.objects.all()
+    return render(request, 'app_store/supply_list.html', {'supplies': supplies})
+
+
+
+def create_sale(request):
+    SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)
+    if request.method == 'POST':
+        sale_form = SaleForm(request.POST)
+        sale_item_formset = SaleItemFormSet(request.POST)
+        if sale_form.is_valid() and sale_item_formset.is_valid():
+            sale = sale_form.save()
+            instances = sale_item_formset.save(commit=False)
+            for instance in instances:
+                instance.sale = sale
+                instance.save()
+            return redirect('sales_list')
+    else:
+        sale_form = SaleForm()
+        sale_item_formset = SaleItemFormSet()
+    return render(request, 'app_store/create_sale.html', {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
+
+def get_good_price(request, good_id):
+    try:
+        good = Good.objects.get(id=good_id)
+        return JsonResponse({'price': float(good.selling_price)})
+    except Good.DoesNotExist:
+        return JsonResponse({'error': 'Товар не найден'}, status=404)
+def sales_list(request):
+    sales = Sale.objects.all()
+    for sale in sales:
+        # Вычисление финальной стоимости с учетом скидки
+        final_cost = sale.final_cost_with_discount()
+        # Обновление поля final_cost и сохранение объекта Sale
+        sale.final_cost = final_cost
+        sale.save()
+    return render(request, 'app_store/sales_list.html', {'sales': sales})
