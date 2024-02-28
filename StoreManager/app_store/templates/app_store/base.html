@@ -33,7 +33,7 @@
                         <a class="headerText dropdown-toggle" href="#" role="button" id="dropdownMenuLink1" data-bs-toggle="dropdown" aria-expanded="false">
                             Поставки
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink1">
                             <li><a class="dropdown-item" href="{% url 'providers_list' %}">Список поставщиков</a></li>
                             <li><a class="dropdown-item" href="{% url 'create_supply' %}">Создание поставки</a></li>
                             <li><a class="dropdown-item" href="{% url 'supply_list' %}">Список поставок</a></li>
@@ -47,18 +47,20 @@
                 {% if request.user.is_authenticated %}
 
                 <div class="dropdown">
-                  <button class="btn btn-secondary bg-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Actions
+                  <button style="background-color: #6F94D2;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Действия
                   </button>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" type="button" href="{% url 'profile' %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="dropdown-item" type="button" href="{% url 'profile' %}">Профиль</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
                   </ul>
                 </div>
 
                 {% else %}
-                    <a class="me-3" href="{% url 'login' %}">Log in</a>
-                    <a href="{% url 'register' %}">Register</a>
+                    <div style="width: 50px;">
+                        <a style="color: #e7eaf6;" class="me-4" href="{% url 'login' %}">Войти</a>
+                        <a style="color: #e7eaf6;" href="{% url 'register' %}">Регистрация</a>
+                    </div>
                 {% endif %}
             </div>
         </div>

@@ -3,44 +3,39 @@
 
 
 {% block content %}
-    <h2>Создание поставки</h2>
     <div class="supplyDiv">
+    <h2 style="color: #e7eaf6;">Создание поставки</h2>
         <form method="post" id="supply-form">
             {% csrf_token %}
-            <div class="supplyFormD">
-                {{ supply_form.as_p }}
-                <h2>Товары в поставке</h2>
+            <div class="supplyFormD pt-3">
+                    <div class="form-group">
+                        <h5>{{ supply_form.provider.label }}</h5>
+                        {{ supply_form.provider }}
+                    </div>
+                <h2>Выбор товаров</h2>
                 <div id="goods-formset">
                {{ supply_good_formset.management_form }}
                 {% for form in supply_good_formset %}
                     <div class="good-form {% if not forloop.first %}hidden{% endif %}">
-                        {{ form.as_p }}
+                        <div class="form-group mb-3 mt-3">
+                            <h5>{{ form.good.label }}</h5>
+                            {{ form.good }}
+                        </div>
+                        <div class="form-group">
+                            <h5>{{ form.quantity.label }}</h5>
+                            {{ form.quantity }}
+                        </div>
                     </div>
                 {% endfor %}
-                </div>
-                    <button type="button" id="show-forms">Добавить еще товар</button>
-                    <input type="submit" value="Сохранить">
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto mt-4">
+                <button class="btn btn-light" type="button" id="show-forms">Добавить еще товар</button>
+                <input class="btn btn-light mb-3" type="submit" value="Сохранить">
+            </div>
             </div>
         </form>
     </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-$(document).ready(function() {
-    var formCount = $('.good-form').length;
-    var emptyForm = $('.good-form:first').clone();
-
-    $('#add-good').click(function() {
-        formCount++;
-        var newForm = emptyForm.clone().find('input, select').val('').end();
-        newForm.find('input[name*="good"]').attr('name', 'form-' + (formCount - 1) + '-good');
-        newForm.find('input[name*="quantity"]').attr('name', 'form-' + (formCount - 1) + '-quantity');
-        newForm.appendTo('#goods-formset');
-    });
-
-    $('#show-forms').click(function() {
-        $('.good-form.hidden:first').removeClass('hidden');
-    });
-});
-</script>
+<script src="{% static 'app_store/js/supply.js' %}"></script>
 {% endblock %}

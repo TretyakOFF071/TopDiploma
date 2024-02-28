@@ -1,9 +1,11 @@
 {% extends 'app_store/base.html' %}
 {% block content %}
-<form class="mt-5" method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary" type="submit">Log in</button>
-  <a href="{% url 'register' %}">Try to sign up</a>
-</form>
+<div class="container">
+  <form class="mt-5" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-primary" type="submit">Войти</button>
+    <a href="{% url 'register' %}">Регистрация</a>
+  </form>
+</div>
 {% endblock  %}

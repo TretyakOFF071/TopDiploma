@@ -1,29 +1,31 @@
 {% extends 'app_store/base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2>Список продаж</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+<h1 class="container mb-4">Список продаж</h1>
+<div class="container mt-5 mb-4">
+    <div class="row row-cols-1 row-cols-md-3 g-3">
         {% for sale in sales %}
         <div class="col">
             <div class="card h-100">
-                <div class="card-body">
+                <div class="card-header" style="background-color: #113f67; color: #e7eaf6;">
                     <h5 class="card-title">Продажа №{{ sale.id }}</h5>
-                    <p class="card-text">
-                        <strong>Дата:</strong> {{ sale.date }}<br>
-                        <strong>Скидка:</strong> {{ sale.discount }} %<br>
-                        <strong>Способ оплаты:</strong> {{ sale.get_payment_method_display }}
+                </div>
+                <div class="card-body" style="background-color: #6F94D2;">
+                    <p style="font-size: 18px;" class="card-text">
+                        Дата:<strong> {{ sale.sale_date }}</strong><br>
+                        Скидка:<strong> {{ sale.discount }} %</strong><br>
+                        Способ оплаты:<strong> {{ sale.get_payment_method_display }}</strong>
                     </p>
-                    <h6>Товары в продаже:</h6>
+                    <h5>Товары:</h5>
                     <ul class="list-group list-group-flush">
                         {% for item in sale.saleitem_set.all %}
-                        <li class="list-group-item">
+                        <li  style="background-color: #e7eaf6;"  class="list-group-item">
                             {{ item.good.name }} - {{ item.quantity }} шт.
                         </li>
                         {% endfor %}
                     </ul>
-                    <h6>Финальная стоимость с учетом скидки:</h6>
-                    <p class="card-text">{{ sale.final_cost|floatformat:2 }} руб.</p>
+                    <h5>Финальная стоимость с учетом скидки:</h5>
+                    <p class="card-text"><strong>{{ sale.final_cost|floatformat:2 }} руб. </strong></p>
                 </div>
             </div>
         </div>

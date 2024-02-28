@@ -30,7 +30,7 @@
     margin-right: 50px;
     display: flex-column;
     width: 250px;
-    height: 150px;
+    height: 200px;
     border: 1px solid black;
     text-align: center;
     background-color: #6F94D2;
@@ -102,11 +102,15 @@ td, th{
 }
 .supplyDiv{
     margin: 0 auto;
-    width: 650px;
-    background-color:  #6F94D2;
+    padding: 15px;
+    width: 450px;
+    min-height: 450px;
+    background-color:  #113f67;
     text-align: center;
     border-radius: 10px;
-
+}
+.supplyFormD{
+    background-color: #6F94D2;;
 }
 .goodChoice{
     margin-right: 50px;
@@ -115,9 +119,17 @@ td, th{
     text-align: center;
     border-radius: 10px;
 }
+.price-display {
+    margin: 0 auto;
+    margin-top: 15px;
+    width: 250px;
+    background-color: #B1cefa;
+    border-radius: 10px;
+}
 .saleItems{
     margin: 0 auto;
     padding: 20px;
+    min-height: 260px;
     width: 750px;
     background-color: #6F94D2;
     text-align: center;
