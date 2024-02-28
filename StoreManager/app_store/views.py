@@ -1,29 +1,20 @@
-from decimal import Decimal
-
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
-from django.db import transaction
 from django.db.models import Sum, F
-from django.forms import inlineformset_factory, formset_factory, modelformset_factory
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import DetailView, CreateView, ListView, FormView
+from django.views.generic import DetailView
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.cache import cache
 from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm, SupplyForm, \
-    SaleForm, SupplyGoodFormSet, SaleItemFormSet, SaleItemForm
-from .models import Profile, Provider, Good, GoodCategory, Supply, Sale, SaleItem
+    SaleForm, SupplyGoodFormSet, SaleItemFormSet
+from .models import Profile, Provider, Good, GoodCategory, Supply, Sale
 from .serializers import ProviderSerializer, GoodSerializer
-
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -47,7 +38,7 @@ def register_view(request):
             login(request, auth_user)
             return redirect('profile')
         else:
-            messages.add_message(request, messages.ERROR, 'Invalid fields')
+            messages.add_message(request, messages.ERROR, 'Форма невалидна!')
 
     user_form = UserForm()
     profile_form = ProfileForm()
@@ -297,6 +288,12 @@ class GoodDetailView(DetailView):
     template_name = 'app_store/good_detail.html'
     context_object_name = 'good'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_supplies'] = self.object.supplygood_set.order_by('-supply__supply_date')[:3]
+        context['latest_sales'] = self.object.saleitem_set.order_by('-sale__sale_date')[:3]
+        return context
+
 
 def create_supply(request):
     if request.method == 'POST':
@@ -321,7 +318,6 @@ def supply_list(request):
 
 
 def create_sale(request):
-    SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)
     if request.method == 'POST':
         sale_form = SaleForm(request.POST)
         sale_item_formset = SaleItemFormSet(request.POST)
@@ -343,12 +339,12 @@ def get_good_price(request, good_id):
         return JsonResponse({'price': float(good.selling_price)})
     except Good.DoesNotExist:
         return JsonResponse({'error': 'Товар не найден'}, status=404)
+
+
 def sales_list(request):
     sales = Sale.objects.all()
     for sale in sales:
-        # Вычисление финальной стоимости с учетом скидки
         final_cost = sale.final_cost_with_discount()
-        # Обновление поля final_cost и сохранение объекта Sale
         sale.final_cost = final_cost
         sale.save()
     return render(request, 'app_store/sales_list.html', {'sales': sales})

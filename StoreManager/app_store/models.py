@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User
-from django.db import models, transaction
-from django.db.models import F, Sum
+from django.db import models
+from django.db.models import F
 
 
 class Profile(models.Model):
-    """Модель пользователя"""
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='пользователь')
     birthday = models.DateField(verbose_name='дата рождения')
     phone = models.CharField(max_length=11)
@@ -134,13 +133,10 @@ class Sale(models.Model):
     def total_cost(self):
         return sum(item.total_cost() for item in self.saleitem_set.all())
 
-    # Метод для вычисления финальной стоимости с учетом скидки
     def final_cost_with_discount(self):
         return self.total_cost() * (1 - self.discount / 100)
 
-    # Переопределение метода save для автоматического вычисления и сохранения финальной стоимости
     def save(self, *args, **kwargs):
-        # Вычисление финальной стоимости с учетом скидки
         self.final_cost = self.final_cost_with_discount()
         super().save(*args, **kwargs)
     class Meta:
