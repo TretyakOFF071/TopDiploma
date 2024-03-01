@@ -1,63 +1,61 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import MinValueValidator, MaxValueValidator, MaxLengthValidator
 from django.forms import inlineformset_factory
 
 from .models import User, Profile, Good, GoodCategory, Provider, Supply, Sale, SupplyGood, SaleItem
 from django import forms
-from django.core.validators import RegexValidator
+from django.utils.translation import gettext_lazy as _
+
+
 
 class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
         labels = {
-            'username': 'Имя пользователя',
-            'first_name': 'Имя',
-            'last_name': 'Фамилия',
-            'email': 'Email',
-            'password1': 'Пароль',
-            'password2': 'Подтверждение пароля',
+            'username': _('Имя пользователя'),
+            'first_name': _('Имя'),
+            'last_name': _('Фамилия'),
+            'email': _('Email'),
+            'password1': _('Пароль'),
+            'password2': _('Подтверждение пароля'),
         }
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
         }
-
 class ProfileForm(forms.ModelForm):
-    birthday = forms.DateField(widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}))
-    phone = forms.CharField(
-        max_length=11,
-        validators=[RegexValidator(regex='^\\+?[0-9]{11}$', message='Некорректный формат номера телефона.')],
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
 
     class Meta:
         model = Profile
         fields = ('birthday', 'phone')
         labels = {
-            'birthday': 'Дата рождения',
-            'phone': 'Номер телефона',
+            'birthday': _('Дата рождения'),
+            'phone': _('Номер телефона'),
         }
         widgets = {
-            'birthday': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'birthday': forms.DateInput(attrs={'class': 'form-control',
+                                               'style': 'width: 250px; margin: 0 auto;'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control',
+                                                           'style': 'width: 250px; margin: 0 auto;'}),
         }
 class GoodForm(forms.ModelForm):
     class Meta:
         model = Good
         exclude = ['sold_quantity', 'quantity']
         labels = {
-            'name': 'Название товара',
-            'part_number': 'Артикул',
-            'category': 'Категория',
-            'selling_price': 'Цена продажи',
-            'purchase_price': 'Закупочная цена',
-            'description': 'Описание товара',
-            'image': 'Картинка товара',
-            'manufacturer': 'Производитель',
+            'name': _('Название товара'),
+            'part_number': _('Артикул'),
+            'category': _('Категория'),
+            'selling_price': _('Цена продажи'),
+            'purchase_price': _('Закупочная цена'),
+            'description': _('Описание товара'),
+            'image': _('Картинка товара'),
+            'manufacturer': _('Производитель'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control',
@@ -84,11 +82,11 @@ class ProviderForm(forms.ModelForm):
         model = Provider
         fields = ['name', 'contact_person', 'phone_number', 'email', 'categories']
         labels = {
-            'name': 'Название поставщика',
-            'contact_person': 'Контактное лицо',
-            'phone_number': 'Номер телефона',
-            'email': 'Электронная почта',
-            'categories': 'Категории товаров',
+            'name': _('Название поставщика'),
+            'contact_person': _('Контактное лицо'),
+            'phone_number': _('Номер телефона'),
+            'email': _('Электронная почта'),
+            'categories': _('Категории товаров'),
         }
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control',
@@ -111,27 +109,33 @@ class GoodCategoryForm(forms.ModelForm):
     class Meta:
         model = GoodCategory
         fields = ['name']
+        labels = {
+            'name': _('Категория товара')
+        }
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control',
+                                        'style': 'width: 200px; margin: 0 auto;'})
+        }
 
 class SupplyForm(forms.ModelForm):
     class Meta:
         model = Supply
         fields = ['provider']
         labels = {
-            'provider': 'Поставщик'
+            'provider': _('Поставщик')
         }
         widgets = {
             'provider': forms.Select(attrs={'class': 'form-select',
-                                        'style': 'width: 250px; margin: 0 auto;'})
+                                            'style': 'width: 250px; margin: 0 auto;'})
         }
-
 
 class SupplyGoodForm(forms.ModelForm):
     class Meta:
         model = SupplyGood
         fields = ['good', 'quantity']
         labels = {
-            'good': 'Товар',
-            'quantity': 'Количество товаров'
+            'good': _('Товар'),
+            'quantity': _('Количество товаров')
         }
         widgets = {
             'good': forms.Select(attrs={'class': 'form-select',
@@ -139,6 +143,7 @@ class SupplyGoodForm(forms.ModelForm):
             'quantity': forms.NumberInput(attrs={'class': 'form-control',
                                                  'style': 'width: 250px; margin: 0 auto;'}),
         }
+
 SupplyGoodFormSet = inlineformset_factory(Supply, SupplyGood, form=SupplyGoodForm, extra=5, can_delete=False)
 
 class SaleForm(forms.ModelForm):
@@ -146,19 +151,28 @@ class SaleForm(forms.ModelForm):
         model = Sale
         fields = ['discount', 'payment_method']
         labels = {
-            'discount': 'Скидка',
-            'payment_method': 'Способ оплаты'
+            'discount': _('Скидка'),
+            'payment_method': _('Способ оплаты')
         }
         widgets = {
-            'discount': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
-            'payment_method': forms.Select(attrs={'class': 'form-select', 'style': 'width: 250px; margin: 0 auto;'}),
+            'discount': forms.NumberInput(attrs={'class': 'form-control',
+                                                 'style': 'width: 250px; margin: 0 auto;', 'min': 0, 'max': 50, 'max_length': 3}),
+            'payment_method' : forms.Select(attrs={'class': 'form-select', 'style': 'width: 250px; margin: 0 auto;'}),
         }
 
-class SaleItemForm(forms.ModelForm):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['discount'].validators = [MinValueValidator(0), MaxValueValidator(50), MaxLengthValidator(2)]
 
+
+class SaleItemForm(forms.ModelForm):
     class Meta:
         model = SaleItem
         fields = ['good', 'quantity']
+        labels = {
+            'good': _('Товар'),
+            'quantity': _('Количество')
+        }
         widgets = {
             'good': forms.Select(attrs={'class': 'form-select', 'style': 'width: 250px;  margin: 0 auto;'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),

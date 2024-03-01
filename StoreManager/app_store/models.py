@@ -73,6 +73,8 @@ class Good(models.Model):
         self.save(update_fields=['quantity'])
 
     def make_sale(self, num):
+        if self.quantity < num:
+            raise ValueError("Недостаточно товара в наличии для продажи")
         self.quantity = F('quantity') - num
         self.sold_quantity = F('sold_quantity') + num
         self.save(update_fields=['quantity', 'sold_quantity'])
