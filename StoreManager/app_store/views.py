@@ -5,7 +5,7 @@ from django.db.models import Sum, F
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -15,6 +15,8 @@ from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryFo
     SaleForm, SupplyGoodFormSet, SaleItemFormSet
 from .models import Profile, Provider, Good, GoodCategory, Supply, Sale
 from .serializers import ProviderSerializer, GoodSerializer
+
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -38,11 +40,18 @@ def register_view(request):
             login(request, auth_user)
             return redirect('profile')
         else:
-            messages.add_message(request, messages.ERROR, 'Форма невалидна!')
+            for field, errors in user_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+            for field, errors in profile_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
 
-    user_form = UserForm()
-    profile_form = ProfileForm()
-    return render(request, 'app_store/register.html', context={
+    else:
+        user_form = UserForm()
+        profile_form = ProfileForm()
+
+    return render(request, 'app_store/register.html', {
         'user_form': user_form,
         'profile_form': profile_form
     })
@@ -62,9 +71,10 @@ class CustomLogoutView(LogoutView):
     template_name = 'app_store/logout.html'
     next_page = 'register'
 
-def profile_view(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'app_store/profile.html', context={'profile': profile})
+class ProfileView(View):
+    def get(self, request):
+        profile = get_object_or_404(Profile, user=request.user)
+        return render(request, 'app_store/profile.html', {'profile': profile})
 
 
 # ------------------------------------API----------------------------------------------------------------------------
@@ -311,40 +321,67 @@ def create_supply(request):
         supply_good_formset = SupplyGoodFormSet()
     return render(request, 'app_store/create_supply.html', {'supply_form': supply_form, 'supply_good_formset': supply_good_formset})
 
-def supply_list(request):
-    supplies = Supply.objects.all()
-    return render(request, 'app_store/supply_list.html', {'supplies': supplies})
+class SupplyListView(ListView):
+    model = Supply
+    template_name = 'app_store/supply_list.html'
+    context_object_name = 'supplies'
 
 
 
-def create_sale(request):
-    if request.method == 'POST':
+class CreateSaleView(View):
+    template_name = 'app_store/create_sale.html'
+
+    def get(self, request):
+        sale_form = SaleForm()
+        sale_item_formset = SaleItemFormSet()
+        return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
+
+    def post(self, request):
         sale_form = SaleForm(request.POST)
         sale_item_formset = SaleItemFormSet(request.POST)
         if sale_form.is_valid() and sale_item_formset.is_valid():
+            for form in sale_item_formset:
+                good = form.cleaned_data.get('good')
+                quantity = form.cleaned_data.get('quantity')
+                if good and good.quantity < quantity:
+                    messages.error(request, f"Недостаточно товара '{good.name}' в наличии для продажи")
+                    # Создаем новый экземпляр SaleItemFormSet без данных
+                    empty_formset = SaleItemFormSet()
+                    return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': empty_formset})
             sale = sale_form.save()
             instances = sale_item_formset.save(commit=False)
             for instance in instances:
                 instance.sale = sale
                 instance.save()
             return redirect('sales_list')
-    else:
-        sale_form = SaleForm()
-        sale_item_formset = SaleItemFormSet()
-    return render(request, 'app_store/create_sale.html', {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
+        else:
+            return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
 
-def get_good_price(request, good_id):
-    try:
-        good = Good.objects.get(id=good_id)
-        return JsonResponse({'price': float(good.selling_price)})
-    except Good.DoesNotExist:
-        return JsonResponse({'error': 'Товар не найден'}, status=404)
+class GetGoodPriceView(View):
+    def get(self, request, good_id):
+        try:
+            good = Good.objects.get(id=good_id)
+            return JsonResponse({'price': float(good.selling_price)})
+        except Good.DoesNotExist:
+            return JsonResponse({'error': 'Товар не найден'}, status=404)
 
 
-def sales_list(request):
-    sales = Sale.objects.all()
-    for sale in sales:
-        final_cost = sale.final_cost_with_discount()
-        sale.final_cost = final_cost
-        sale.save()
-    return render(request, 'app_store/sales_list.html', {'sales': sales})
+class SalesListView(ListView):
+    model = Sale
+    template_name = 'app_store/sales_list.html'
+    context_object_name = 'sales'
+
+    def get_queryset(self):
+        sales = super().get_queryset()
+        for sale in sales:
+            final_cost = sale.final_cost_with_discount()
+            sale.final_cost = final_cost
+            sale.save()
+        return sales
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Вычисление общей суммы со всех продаж
+        total_sum = self.get_queryset().aggregate(total_sum=Sum('final_cost'))['total_sum']
+        context['total_sum'] = total_sum
+        return context

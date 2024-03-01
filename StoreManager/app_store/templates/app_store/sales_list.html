@@ -1,22 +1,27 @@
 {% extends 'app_store/base.html' %}
+{% load i18n %}
+
 
 {% block content %}
-<h1 class="container mb-4">Список продаж</h1>
+<h1 class="container mb-4">{% trans "Список продаж" %}</h1>
+<div class="container">
+    <h5>{% trans "Сумма всех продаж" %}: {{ total_sum }} RUB.</h5>
+</div>
 <div class="container mt-5 mb-4">
     <div class="row row-cols-1 row-cols-md-3 g-3">
         {% for sale in sales %}
         <div class="col">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #113f67; color: #e7eaf6;">
-                    <h5 class="card-title">Продажа №{{ sale.id }}</h5>
+                    <h5 class="card-title">{% trans "Продажа" %} №{{ sale.id }}</h5>
                 </div>
                 <div class="card-body" style="background-color: #6F94D2;">
                     <p style="font-size: 18px;" class="card-text">
-                        Дата:<strong> {{ sale.sale_date }}</strong><br>
-                        Скидка:<strong> {{ sale.discount }} %</strong><br>
-                        Способ оплаты:<strong> {{ sale.get_payment_method_display }}</strong>
+                        {% trans "Дата" %}:<strong> {{ sale.sale_date }}</strong><br>
+                        {% trans "Скидка" %}:<strong> {{ sale.discount }} %</strong><br>
+                        {% trans "Способ оплаты" %}:<strong> {{ sale.get_payment_method_display }}</strong>
                     </p>
-                    <h5>Товары:</h5>
+                    <h5>{% trans "Товары" %}:</h5>
                     <ul class="list-group list-group-flush">
                         {% for item in sale.saleitem_set.all %}
                         <li  style="background-color: #e7eaf6;"  class="list-group-item">
@@ -24,14 +29,14 @@
                         </li>
                         {% endfor %}
                     </ul>
-                    <h5>Финальная стоимость с учетом скидки:</h5>
-                    <p class="card-text"><strong>{{ sale.final_cost|floatformat:2 }} руб. </strong></p>
+                    <h5>{% trans "Финальная стоимость с учетом скидки" %}:</h5>
+                    <p class="card-text"><strong>{{ sale.final_cost|floatformat:2 }} RUB. </strong></p>
                 </div>
             </div>
         </div>
         {% empty %}
         <div class="col-md-12">
-            <p>Нет продаж.</p>
+            <p>{% trans "Нет продаж" %}.</p>
         </div>
         {% endfor %}
     </div>

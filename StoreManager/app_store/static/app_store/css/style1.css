@@ -3,6 +3,7 @@
     background-color: #113f67;
     margin-bottom: 30px;
 }
+
 .headerText {
     color: #e7eaf6;
     text-decoration: none;
@@ -24,6 +25,11 @@
     color: #faa;
 	box-shadow: 0 50px 5px rgba(0, 0, 0, 0.15) inset;
 	transition: 0.3s linear all;
+}
+
+.loginForm{
+    background-color: #6F94D2;
+    text-align: center;
 }
 
 .addСategory {
@@ -72,7 +78,7 @@ td, th{
     height: 750px;
     border: 1px solid black;
     text-align: center;
-    background-color: #a2a8d3;
+    background-color: #b1cefa;
     border-radius: 10px;
 }
 .addProviderContainer{

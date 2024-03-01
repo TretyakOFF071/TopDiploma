@@ -1,10 +1,12 @@
 {% extends 'app_store/base.html' %}
 {% load static %}
+{% load i18n %}
+
 {% block content %}
 <div class="container my-5">
     <div class="card custom-card">
       <div style="background-color: #113f67; " class="card-header custom-header">
-        <h5 style="color: #e7eaf6;" class="card-title">{{ good.name }}</h5>
+        <h3 style="color: #e7eaf6;" class="card-title">{{ good.name }}</h3>
       </div>
       <div style="background-color: #6F94D2;" class="card-body custom-body">
         <div class="row">
@@ -12,59 +14,59 @@
             {% if good.image %}
               <img src="{{ good.image.url }}" class="img-fluid img-thumbnail custom-image" alt="{{ good.name }}">
             {% else %}
-              <p class="text-muted">Нет изображения</p>
+              <p class="text-muted">{% trans "Нет изображения" %}</p>
             {% endif %}
           </div>
           <div style="background-color: #e7eaf6;" class="col-md-8">
-            <p class="card-text"><strong>Артикул:</strong> {{ good.part_number }}</p>
-            <p class="card-text"><strong>Категория:</strong> {{ good.category }}</p>
-            <p class="card-text"><strong>Цена продажи:</strong> {{ good.selling_price }} RUB.</p>
-            <p class="card-text"><strong>Закупочная цена:</strong> {{ good.purchase_price }} RUB.</p>
-            <p class="card-text"><strong>Описание:</strong> {{ good.description }}</p>
-            <p class="card-text"><strong>Остаток в наличии: </strong> {{ good.quantity }}</p>
-            <p class="card-text"><strong>Продано:</strong> {{ good.sold_quantity }}</p>
-            <p class="card-text"><strong>Поставщик:</strong> {{ good.manufacturer }}</p>
+            <p class="card-text"><strong>{% trans "Артикул" %}:</strong> {{ good.part_number }}</p>
+            <p class="card-text"><strong>{% trans "Категория" %}:</strong> {{ good.category }}</p>
+            <p class="card-text"><strong>{% trans "Цена продажи" %}:</strong> {{ good.selling_price }} RUB.</p>
+            <p class="card-text"><strong>{% trans "Закупочная цена" %}:</strong> {{ good.purchase_price }} RUB.</p>
+            <p class="card-text"><strong>{% trans "Описание" %}:</strong> {{ good.description }}</p>
+            <p class="card-text"><strong>{% trans "Остаток в наличии" %}: </strong> {{ good.quantity }}</p>
+            <p class="card-text"><strong>{% trans "Продано" %}:</strong> {{ good.sold_quantity }}</p>
+            <p class="card-text"><strong>{% trans "Поставщик" %}:</strong> {{ good.manufacturer }}</p>
           </div>
         </div>
       </div>
       <div style="background-color: #113f67;" class="card-footer custom-footer">
-        <a href="{% url 'goods_list' %}" class="btn btn-light custom-button">Назад к списку товаров</a>
+        <a href="{% url 'goods_list' %}" class="btn btn-light custom-button">{% trans "Назад к списку товаров" %}</a>
       </div>
     </div>
 
   <div class="mt-5">
     <div class="row" style="background-color: #113f67; color: #e7eaf6;">
         <div style="border: 1px solid white;" class="col-md-6 p-2">
-            <h3>Последние 3 поставки товара</h3>
+            <h3>{% trans "Последние 3 поставки товара" %}</h3>
             {% for supply in latest_supplies %}
             <div class="card mb-3">
                 <div style="background-color: #6F94D2;" class="card-header">
-                    <h5>Поставка № {{ supply.supply.id }}<br> {{ supply.supply.supply_date }}</h5>
+                    <h5>{% trans "Поставка" %} № {{ supply.supply.id }}<br> {{ supply.supply.supply_date }}</h5>
                 </div>
                 <div style="background-color: #e7eaf6;" class="card-body">
-                    <p class="card-title">Поставщик: <strong>{{ supply.supply.provider.name }}</strong></p>
-                    <p class="card-text">Количество: <strong>{{ supply.quantity }} шт.</strong></p>
+                    <p class="card-title">{% trans "Поставщик" %}: <strong>{{ supply.supply.provider.name }}</strong></p>
+                    <p class="card-text">{% trans "Количество" %}: <strong>{{ supply.quantity }} шт.</strong></p>
                 </div>
             </div>
             {% empty %}
-            <p>Нет поставщиков</p>
+            <p>{% trans "Нет поставщиков" %}</p>
             {% endfor %}
         </div>
 
         <div style="border: 1px solid white; color: #e7eaf6;" class="col-md-6 p-2">
-            <h3>Последние 3 продажи товара</h3>
+            <h3>{% trans "Последние 3 продажи товара" %}</h3>
             {% for sale in latest_sales %}
             <div class="card mb-3">
                 <div style="background-color: #6F94D2;" class="card-header">
-                    <h5>Продажа №{{ sale.sale.id }} <br>{{ sale.sale.sale_date }}</h5>
+                    <h5>{% trans "Продажа" %} №{{ sale.sale.id }} <br>{{ sale.sale.sale_date }}</h5>
                 </div>
                 <div style="background-color: #e7eaf6;" class="card-body">
-                    <p class="card-title">Количество: <strong>{{ sale.quantity }} шт.</strong></p>
-                    <p class="card-text">Сумма продажи: <strong>{{ sale.total_cost }} RUB.</strong></p>
+                    <p class="card-title">{% trans "Количество" %}: <strong>{{ sale.quantity }} шт.</strong></p>
+                    <p class="card-text">{% trans "Сумма продажи" %}: <strong>{{ sale.total_cost }} RUB.</strong></p>
                 </div>
             </div>
             {% empty %}
-            <p>Нет продаж</p>
+            <p>{% trans "Нет продаж" %}</p>
             {% endfor %}
         </div>
     </div>

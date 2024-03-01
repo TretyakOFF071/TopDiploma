@@ -1,44 +1,71 @@
 {% extends 'app_store/base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block content %}
     <div class="editGoodContainer">
-        <h2>Редактировать товар</h2>
+    <div class="overlay"></div>
+
+        <h2>{% trans "Редактировать товар" %}</h2>
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group mb-1">
-                {{ form.name.label_tag }}
+                <h5>{{ form.name.label_tag }}
                 {{ form.name }}
             </div>
             <div class="form-group mb-1">
-                {{ form.part_number.label_tag }}
+                <h5>{{ form.part_number.label_tag }}</h5>
                 {{ form.part_number }}
             </div>
             <div class="form-group mb-1">
-                {{ form.category.label_tag }}
+                <h5></h5> {{ form.category.label_tag }}</h5>
                 {{ form.category }}
             </div>
             <div class="form-group mb-1">
-                {{ form.selling_price.label_tag }}
+                <h5>{{ form.selling_price.label_tag }}</h5>
                 {{ form.selling_price }}
             </div>
             <div class="form-group mb-1">
-                {{ form.purchase_price.label_tag }}
+                <h5>{{ form.purchase_price.label_tag }}</h5>
                 {{ form.purchase_price }}
             </div>
             <div class="form-group mb-1">
-                {{ form.description.label_tag }}
+                <h5>{{ form.description.label_tag }}</h5>
                 {{ form.description }}
             </div>
             <div class="form-group">
-                <p>{{ form.image.label_tag }}</p>
+                <h5>{{ form.image.label_tag }}</h5>
                 {{ form.image }}
             </div>
             <div class="form-group mb-3">
-                {{ form.manufacturer.label_tag }}
+                <h5>{{ form.manufacturer.label_tag }}</h5>
                 {{ form.manufacturer }}
             </div>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit" class="btn btn-light">{% trans "Сохранить" %}</button>
         </form>
     </div>
+{% block extra_css %}
+<style>
+    body {
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный цвет */
+        z-index: 1; /* Помещаем затемнение поверх других элементов */
+    }
+
+    .editGoodContainer {
+        position: relative;
+        z-index: 2; /* Помещаем див с формой поверх затемнения */
+    }
+</style>
+{% endblock %}
 {% endblock %}

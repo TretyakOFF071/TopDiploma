@@ -1,0 +1,446 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-03-01 21:57+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\app_store\forms.py:16 .\app_store\templates\app_store\profile.html:12
+msgid "Имя пользователя"
+msgstr "Имя пользователя"
+
+#: .\app_store\forms.py:17
+msgid "Имя"
+msgstr "Имя"
+
+#: .\app_store\forms.py:18
+msgid "Фамилия"
+msgstr "Фамилия"
+
+#: .\app_store\forms.py:19
+msgid "Email"
+msgstr "Email"
+
+#: .\app_store\forms.py:20
+msgid "Пароль"
+msgstr "Пароль"
+
+#: .\app_store\forms.py:21
+msgid "Подтверждение пароля"
+msgstr "Подтверждение пароля"
+
+#: .\app_store\forms.py:37 .\app_store\templates\app_store\profile.html:14
+msgid "Дата рождения"
+msgstr "Дата рождения"
+
+#: .\app_store\forms.py:38 .\app_store\forms.py:87
+msgid "Номер телефона"
+msgstr "Номер телефона"
+
+#: .\app_store\forms.py:51
+msgid "Название товара"
+msgstr "Название товара"
+
+#: .\app_store\forms.py:52 .\app_store\templates\app_store\good_detail.html:21
+#: .\app_store\templates\app_store\goods_list.html:65
+msgid "Артикул"
+msgstr "Артикул"
+
+#: .\app_store\forms.py:53 .\app_store\templates\app_store\good_detail.html:22
+#: .\app_store\templates\app_store\goods_list.html:66
+msgid "Категория"
+msgstr "Категория"
+
+#: .\app_store\forms.py:54 .\app_store\templates\app_store\good_detail.html:23
+#: .\app_store\templates\app_store\goods_list.html:67
+msgid "Цена продажи"
+msgstr "Цена продажи"
+
+#: .\app_store\forms.py:55 .\app_store\templates\app_store\good_detail.html:24
+#: .\app_store\templates\app_store\goods_list.html:68
+msgid "Закупочная цена"
+msgstr "Закупочная цена"
+
+#: .\app_store\forms.py:56
+msgid "Описание товара"
+msgstr "Описание товара"
+
+#: .\app_store\forms.py:57
+msgid "Картинка товара"
+msgstr "Картинка товара"
+
+#: .\app_store\forms.py:58 .\app_store\templates\app_store\goods_list.html:72
+msgid "Производитель"
+msgstr "Производитель"
+
+#: .\app_store\forms.py:85
+msgid "Название поставщика"
+msgstr "Название поставщика"
+
+#: .\app_store\forms.py:86
+#: .\app_store\templates\app_store\providers_list.html:47
+msgid "Контактное лицо"
+msgstr "Контактное лицо"
+
+#: .\app_store\forms.py:88
+msgid "Электронная почта"
+msgstr "Электронная почта"
+
+#: .\app_store\forms.py:89 .\app_store\templates\app_store\base.html:46
+#: .\app_store\templates\app_store\categories_list.html:11
+msgid "Категории товаров"
+msgstr "Категории товаров"
+
+#: .\app_store\forms.py:113
+msgid "Категория товара"
+msgstr "Категория товара"
+
+#: .\app_store\forms.py:125 .\app_store\templates\app_store\good_detail.html:28
+#: .\app_store\templates\app_store\good_detail.html:47
+msgid "Поставщик"
+msgstr "Поставщик"
+
+#: .\app_store\forms.py:137 .\app_store\forms.py:173
+#: .\app_store\templates\app_store\supply_list.html:19
+msgid "Товар"
+msgstr "Товар"
+
+#: .\app_store\forms.py:138
+msgid "Количество товаров"
+msgstr "Количество товаров"
+
+#: .\app_store\forms.py:154 .\app_store\templates\app_store\sales_list.html:21
+msgid "Скидка"
+msgstr "Скидка"
+
+#: .\app_store\forms.py:155 .\app_store\templates\app_store\sales_list.html:22
+msgid "Способ оплаты"
+msgstr "Способ оплаты"
+
+#: .\app_store\forms.py:174 .\app_store\templates\app_store\good_detail.html:48
+#: .\app_store\templates\app_store\good_detail.html:64
+#: .\app_store\templates\app_store\goods_list.html:70
+#: .\app_store\templates\app_store\supply_list.html:20
+msgid "Количество"
+msgstr "Количество"
+
+#: .\app_store\templates\app_store\base.html:23
+msgid "Продажи"
+msgstr "Продажи"
+
+#: .\app_store\templates\app_store\base.html:26
+#: .\app_store\templates\app_store\sales_list.html:6
+msgid "Список продаж"
+msgstr "Список продаж"
+
+#: .\app_store\templates\app_store\base.html:27
+#: .\app_store\templates\app_store\create_sale.html:17
+msgid "Создание продажи"
+msgstr "Создание продажи"
+
+#: .\app_store\templates\app_store\base.html:32
+msgid "Поставки"
+msgstr "Поставки"
+
+#: .\app_store\templates\app_store\base.html:35
+#: .\app_store\templates\app_store\providers_list.html:12
+msgid "Список поставщиков"
+msgstr "Список поставщиков"
+
+#: .\app_store\templates\app_store\base.html:36
+#: .\app_store\templates\app_store\create_supply.html:8
+msgid "Создание поставки"
+msgstr "Создание поставки"
+
+#: .\app_store\templates\app_store\base.html:37
+#: .\app_store\templates\app_store\supply_list.html:6
+msgid "Список поставок"
+msgstr "Список поставок"
+
+#: .\app_store\templates\app_store\base.html:42
+#: .\app_store\templates\app_store\sales_list.html:24
+msgid "Товары"
+msgstr "Товары"
+
+#: .\app_store\templates\app_store\base.html:45
+#: .\app_store\templates\app_store\goods_list.html:12
+msgid "Список товаров"
+msgstr "Список товаров"
+
+#: .\app_store\templates\app_store\base.html:55
+#: .\app_store\templates\app_store\goods_list.html:73
+#: .\app_store\templates\app_store\providers_list.html:51
+msgid "Действия"
+msgstr "Действия"
+
+#: .\app_store\templates\app_store\base.html:58
+msgid "Профиль"
+msgstr "Профиль"
+
+#: .\app_store\templates\app_store\base.html:59
+msgid "Выйти"
+msgstr "Выйти"
+
+#: .\app_store\templates\app_store\base.html:82
+#: .\app_store\templates\app_store\login.html:25
+msgid "Войти"
+msgstr "Войти"
+
+#: .\app_store\templates\app_store\base.html:83
+#: .\app_store\templates\app_store\register.html:24
+msgid "Регистрация"
+msgstr "Регистрация"
+
+#: .\app_store\templates\app_store\categories_list.html:14
+msgid "Добавить новую категорию"
+msgstr "Добавить новую категорию"
+
+#: .\app_store\templates\app_store\categories_list.html:21
+#: .\app_store\templates\app_store\providers_list.html:128
+msgid "Добавить"
+msgstr "Добавить"
+
+#: .\app_store\templates\app_store\categories_list.html:28
+msgid "Название категории"
+msgstr "Название категории"
+
+#: .\app_store\templates\app_store\categories_list.html:29
+msgid "Действие"
+msgstr "Действие"
+
+#: .\app_store\templates\app_store\categories_list.html:39
+msgid "Удалить"
+msgstr "Удалить"
+
+#: .\app_store\templates\app_store\categories_list.html:45
+msgid "Нет категорий"
+msgstr "Нет категорий"
+
+#: .\app_store\templates\app_store\create_sale.html:22
+#: .\app_store\templates\app_store\create_supply.html:16
+msgid "Выбор товаров"
+msgstr "Выбор товаров"
+
+#: .\app_store\templates\app_store\create_sale.html:40
+#: .\app_store\templates\app_store\create_supply.html:33
+msgid "Добавить еще товар"
+msgstr "Добавить еще товар"
+
+#: .\app_store\templates\app_store\create_sale.html:44
+msgid "Меню оплаты"
+msgstr "Меню оплаты"
+
+#: .\app_store\templates\app_store\create_sale.html:54
+msgid "Общая сумма"
+msgstr "Общая сумма"
+
+#: .\app_store\templates\app_store\create_sale.html:55
+msgid "Общая сумма с учетом скидки"
+msgstr "Общая сумма с учетом скидки"
+
+#: .\app_store\templates\app_store\create_sale.html:58
+#: .\app_store\templates\app_store\create_supply.html:34
+#: .\app_store\templates\app_store\edit_good.html:45
+#: .\app_store\templates\app_store\edit_provider.html:30
+msgid "Сохранить"
+msgstr "Сохранить"
+
+#: .\app_store\templates\app_store\edit_good.html:9
+msgid "Редактировать товар"
+msgstr "Редактировать товар"
+
+#: .\app_store\templates\app_store\edit_provider.html:7
+msgid "Редактировать поставщика"
+msgstr "Редактировать поставщика"
+
+#: .\app_store\templates\app_store\good_detail.html:17
+msgid "Нет изображения"
+msgstr "Нет изображения"
+
+#: .\app_store\templates\app_store\good_detail.html:25
+msgid "Описание"
+msgstr "Описание"
+
+#: .\app_store\templates\app_store\good_detail.html:26
+msgid "Остаток в наличии"
+msgstr "Остатов в наличии"
+
+#: .\app_store\templates\app_store\good_detail.html:27
+#: .\app_store\templates\app_store\goods_list.html:71
+msgid "Продано"
+msgstr "Продано"
+
+#: .\app_store\templates\app_store\good_detail.html:33
+#, fuzzy
+msgid "Назад к списку товаров"
+msgstr "Назад к списку товаров"
+
+#: .\app_store\templates\app_store\good_detail.html:40
+msgid "Последние 3 поставки товара"
+msgstr "Последние 3 поставки товара"
+
+#: .\app_store\templates\app_store\good_detail.html:44
+#: .\app_store\templates\app_store\supply_list.html:12
+msgid "Поставка"
+msgstr "Поставка"
+
+#: .\app_store\templates\app_store\good_detail.html:52
+#: .\app_store\templates\app_store\providers_list.html:79
+msgid "Нет поставщиков"
+msgstr "Нет поставщиков"
+
+#: .\app_store\templates\app_store\good_detail.html:57
+msgid "Последние 3 продажи товара"
+msgstr "Последние 3 продажи товара"
+
+#: .\app_store\templates\app_store\good_detail.html:61
+#: .\app_store\templates\app_store\sales_list.html:16
+msgid "Продажа"
+msgstr "Продажа"
+
+#: .\app_store\templates\app_store\good_detail.html:65
+msgid "Сумма продажи"
+msgstr "Сумма продажи"
+
+#: .\app_store\templates\app_store\good_detail.html:69
+#: .\app_store\templates\app_store\sales_list.html:39
+msgid "Нет продаж"
+msgstr "Нет продаж"
+
+#: .\app_store\templates\app_store\goods_list.html:28
+#: .\app_store\templates\app_store\providers_list.html:16
+msgid "Фильтры"
+msgstr "Фильтры"
+
+#: .\app_store\templates\app_store\goods_list.html:31
+#: .\app_store\templates\app_store\providers_list.html:19
+msgid "Фильтр по названию"
+msgstr "Фиьлтр по названию"
+
+#: .\app_store\templates\app_store\goods_list.html:35
+msgid "Фильтр по артикулу"
+msgstr "Фильтр по артикулу"
+
+#: .\app_store\templates\app_store\goods_list.html:39
+#: .\app_store\templates\app_store\providers_list.html:23
+msgid "Фильтр по категориям"
+msgstr "Фильтр по категориям"
+
+#: .\app_store\templates\app_store\goods_list.html:41
+#: .\app_store\templates\app_store\providers_list.html:25
+msgid "Все категории"
+msgstr "Все категории"
+
+#: .\app_store\templates\app_store\goods_list.html:49
+#: .\app_store\templates\app_store\providers_list.html:33
+msgid "Применить"
+msgstr "Применить"
+
+#: .\app_store\templates\app_store\goods_list.html:50
+#: .\app_store\templates\app_store\providers_list.html:34
+msgid "Очистить"
+msgstr "Очистить"
+
+#: .\app_store\templates\app_store\goods_list.html:58
+#: .\app_store\templates\app_store\goods_list.html:175
+msgid "Добавить товар"
+msgstr "Добавить товар"
+
+#: .\app_store\templates\app_store\goods_list.html:64
+#: .\app_store\templates\app_store\providers_list.html:46
+msgid "Название"
+msgstr "Название"
+
+#: .\app_store\templates\app_store\goods_list.html:69
+msgid "Изображение"
+msgstr "Изображение"
+
+#: .\app_store\templates\app_store\goods_list.html:106
+msgid "Нет товаров"
+msgstr "Нет товаров"
+
+#: .\app_store\templates\app_store\goods_list.html:112
+msgid "Общая закупочная цена"
+msgstr "Общая закупочная цена"
+
+#: .\app_store\templates\app_store\goods_list.html:116
+msgid "Общая цена продажи"
+msgstr "Общая цена продажи"
+
+#: .\app_store\templates\app_store\goods_list.html:131
+msgid "Создать новый товар"
+msgstr "Создать новый товар"
+
+#: .\app_store\templates\app_store\goods_list.html:174
+#: .\app_store\templates\app_store\providers_list.html:127
+msgid "Закрыть"
+msgstr "Закрыть"
+
+#: .\app_store\templates\app_store\login.html:10
+msgid "Вход в систему"
+msgstr "Вход в систему"
+
+#: .\app_store\templates\app_store\profile.html:9
+msgid "Личный кабинет"
+msgstr "Личный кабинет"
+
+#: .\app_store\templates\app_store\profile.html:15
+#: .\app_store\templates\app_store\providers_list.html:48
+msgid "Телефон"
+msgstr "Телефон"
+
+#: .\app_store\templates\app_store\providers_list.html:40
+#: .\app_store\templates\app_store\providers_list.html:96
+msgid "Добавить поставщика"
+msgstr "Добавить поставщика"
+
+#: .\app_store\templates\app_store\providers_list.html:50
+msgid "Категории"
+msgstr "Категории"
+
+#: .\app_store\templates\app_store\register.html:61
+msgid "Зарегистрироваться"
+msgstr "Зарегистрироваться"
+
+#: .\app_store\templates\app_store\sales_list.html:8
+msgid "Сумма всех продаж"
+msgstr "Сумма всех продаж"
+
+#: .\app_store\templates\app_store\sales_list.html:20
+msgid "Дата"
+msgstr "Дата"
+
+#: .\app_store\templates\app_store\sales_list.html:32
+msgid "Финальная стоимость с учетом скидки"
+msgstr "Финальная стоимость с учетом скидки"
+
+#: .\app_store\templates\app_store\supply_list.html:15
+msgid "Дата поставки"
+msgstr "Дата поставки"
+
+#: .\app_store\templates\app_store\supply_list.html:21
+msgid "Закупочная Стоимость"
+msgstr "Закупочная стоимость"
+
+#: .\app_store\templates\app_store\supply_list.html:26
+msgid "Общая закупочная стоимость товаров"
+msgstr "Общая закупочная стоимость товаров"
+
+#: .\app_store\templates\app_store\supply_list.html:33
+msgid "Нет поставок"
+msgstr "Нет поставок"

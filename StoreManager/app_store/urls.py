@@ -1,17 +1,18 @@
 from django.conf.urls.static import static
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 
-from .views import register_view, CustomLoginView, CustomLogoutView, profile_view, ProviderAPIView, GoodAPIView, \
+from .views import register_view, CustomLoginView, CustomLogoutView, ProfileView, ProviderAPIView, GoodAPIView, \
     ProviderDetailAPI, GoodDetailAPI, ProviderListView, GoodCategoryListView, delete_provider, edit_provider, \
-    GoodsListView, delete_good, edit_good, delete_category, GoodDetailView, create_supply, supply_list, create_sale, \
-    sales_list, get_good_price
+    GoodsListView, delete_good, edit_good, delete_category, GoodDetailView, create_supply, SupplyListView, CreateSaleView, \
+    SalesListView, GetGoodPriceView
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
     path('register/', register_view, name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', CustomLogoutView.as_view(), name='logout'),
-    path('profile/', profile_view, name='profile'),
+    path('profile/', ProfileView.as_view(), name='profile'),
     path('api/providers/', ProviderAPIView.as_view(), name='api_providers_list'),
     path('api/providers/<int:pk>/', ProviderDetailAPI.as_view(), name='api_provider_detail'),
     path('api/goods/', GoodAPIView.as_view(), name='api_goods_list'),
@@ -26,9 +27,9 @@ urlpatterns = [
     path('edit_good/<int:good_id>/', edit_good, name='edit_good'),
     path('good/<int:pk>/', GoodDetailView.as_view(), name='good_detail'),
     path('create_supply/', create_supply, name='create_supply'),
-    path('supply_list/', supply_list, name='supply_list'),
-    path('create_sale/', create_sale, name='create_sale'),
-    path('get_good_price/<int:good_id>/', get_good_price, name='get_good_price'),
-    path('sales_list/', sales_list, name='sales_list'),
+    path('supply_list/', SupplyListView.as_view(), name='supply_list'),
+    path('create_sale/', CreateSaleView.as_view(), name='create_sale'),
+    path('get_good_price/<int:good_id>/', GetGoodPriceView.as_view(), name='get_good_price'),
+    path('sales_list/', SalesListView.as_view(), name='sales_list'),
 
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
