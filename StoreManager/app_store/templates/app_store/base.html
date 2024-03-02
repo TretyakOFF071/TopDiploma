@@ -12,7 +12,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% endblock %}
 </head>
-<body>
+<body style="background: rgb(194,203,214);
+background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1) 100%);">
 {% block header %}
     <header class="header">
         <div class="d-flex justify-content-around mb-3">
@@ -51,7 +52,7 @@
                 {% if request.user.is_authenticated %}
 
             <div class="dropdown">
-              <button style="background-color: #6F94D2;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-light dropdown-toggle btnAct" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {% trans "Действия" %}
               </button>
               <ul class="dropdown-menu">

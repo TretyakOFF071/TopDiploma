@@ -30,13 +30,15 @@
             {% endfor %}
           </select>
         </div>
-          <button type="submit" class="btn btn-primary mt-2 mb-3">{% trans "Применить" %}</button>
-         <button style="width: 100px;" class="btn btn-danger mt-2 mb-3" type="submit" name="clear_filters">{% trans "Очистить" %}</button>
+          <button type="submit" class="btn btn-dark mt-2 mb-3 blueBtn">{% trans "Применить" %}</button>
+         <button style="width: 100px;" class="btn btn-dark mt-2 mb-3 redBtn" type="submit" name="clear_filters">{% trans "Очистить" %}</button>
       </form>
     </div>
     <div class="tableContainer">
       <div class="d-grid gap-2 col-6 mx-auto">
-        <button type="button" class="btn btn-info btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#addProviderModal">
+        <button style="background: rgb(190,217,249);
+         background: radial-gradient(circle, rgba(190,217,249,1) 7%, rgba(0,44,106,1) 100%);
+          border: 1px solid black;" type="button" class="btn btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#addProviderModal">
       {% trans "Добавить поставщика" %}
       </button>
     </div>
@@ -91,41 +93,41 @@
   <!-- Модальное окно -->
   <div class="modal fade" id="addProviderModal" tabindex="-1" aria-labelledby="addProviderModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div style="background-color: #113f67;" class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="addProviderModalLabel">{% trans "Добавить поставщика" %}</h5>
+        <h4 style="color: #e7eaf6" class="modal-title" id="addProviderModalLabel">{% trans "Добавить поставщика" %}</h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
       </div>
-      <div class="modal-body">
+      <div style="background-color: #6F94D2" class="modal-body">
         <div class="addProviderContainer">
           <form id="provider-form" method="post" action="{% url 'providers_list' %}">
             {% csrf_token %}
-              <div class="form-group">
-                <p>{{ form.name.label_tag }}</p>
-                <p>{{ form.name }}</p>
+              <div class="form-group mt-5 mb-1">
+                <h5>{{ form.name.label_tag }}</h5>
+                {{ form.name }}
               </div>
-              <div class="form-group">
-                <p>{{ form.contact_person.label_tag }}</p>
-                <p>{{ form.contact_person }}</p>
+              <div class="form-group mb-1">
+                <h5>{{ form.contact_person.label_tag }}</h5>
+                {{ form.contact_person }}
               </div>
-              <div class="form-group">
-                <p>{{ form.phone_number.label_tag }}</p>
-                <p>{{ form.phone_number }}</p>
+              <div class="form-group mb-1">
+                <h5>{{ form.phone_number.label_tag }}</h5>
+                {{ form.phone_number }}
               </div>
-              <div class="form-group">
-                <p>{{ form.email.label_tag }}</p>
-                <p>{{ form.email }}</p>
+              <div class="form-group mb-1">
+                <h5>{{ form.email.label_tag }}</h5>
+                {{ form.email }}
               </div>
-              <div class="form-group">
-                <p>{{ form.categories.label_tag }}</p>
-                <p>{{ form.categories }}</p>
+              <div class="form-group mb-1">
+                <h5>{{ form.categories.label_tag }}</h5>
+                {{ form.categories }}
             </div>
           </form>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Закрыть" %}</button>
-        <button type="submit" form="provider-form" class="btn btn-primary">{% trans "Добавить" %}</button>
+        <button type="button" class="btn btn-dark redBtn" data-bs-dismiss="modal">{% trans "Закрыть" %}</button>
+        <button type="submit" form="provider-form" class="btn btn-dark blueBtn">{% trans "Добавить" %}</button>
       </div>
     </div>
   </div>

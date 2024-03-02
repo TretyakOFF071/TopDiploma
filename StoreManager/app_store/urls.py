@@ -31,5 +31,4 @@ urlpatterns = [
     path('create_sale/', CreateSaleView.as_view(), name='create_sale'),
     path('get_good_price/<int:good_id>/', GetGoodPriceView.as_view(), name='get_good_price'),
     path('sales_list/', SalesListView.as_view(), name='sales_list'),
-
 ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

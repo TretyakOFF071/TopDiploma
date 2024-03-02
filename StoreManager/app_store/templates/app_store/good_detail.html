@@ -49,7 +49,7 @@
                 </div>
             </div>
             {% empty %}
-            <p>{% trans "Нет поставщиков" %}</p>
+            <p>{% trans "Нет поставок" %}</p>
             {% endfor %}
         </div>
 
@@ -62,7 +62,7 @@
                 </div>
                 <div style="background-color: #e7eaf6;" class="card-body">
                     <p class="card-title">{% trans "Количество" %}: <strong>{{ sale.quantity }} шт.</strong></p>
-                    <p class="card-text">{% trans "Сумма продажи" %}: <strong>{{ sale.total_cost }} RUB.</strong></p>
+                    <p class="card-text">{% trans "Сумма продажи" %}: <strong>{{ sale.sale.final_cost_with_discount|floatformat:2 }} RUB.</strong></p>
                 </div>
             </div>
             {% empty %}
