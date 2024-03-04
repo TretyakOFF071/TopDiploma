@@ -32,16 +32,19 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('birthday', 'phone')
+        fields = ('birthday', 'phone', 'position')
         labels = {
             'birthday': _('Дата рождения'),
             'phone': _('Номер телефона'),
+            'position': _('Должность')
         }
         widgets = {
             'birthday': forms.DateInput(attrs={'class': 'form-control',
                                                'style': 'width: 250px; margin: 0 auto;'}),
             'phone': forms.TextInput(attrs={'class': 'form-control',
                                                            'style': 'width: 250px; margin: 0 auto;'}),
+            'position': forms.TextInput(attrs={'class': 'form-control',
+                                            'style': 'width: 250px; margin: 0 auto;'}),
         }
 class GoodForm(forms.ModelForm):
     class Meta:
@@ -175,7 +178,8 @@ class SaleItemForm(forms.ModelForm):
         }
         widgets = {
             'good': forms.Select(attrs={'class': 'form-select', 'style': 'width: 250px;  margin: 0 auto;'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+            'quantity': forms.NumberInput(attrs={'max_length': 2, 'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
         }
+
 
 SaleItemFormSet = inlineformset_factory(Sale, SaleItem, form=SaleItemForm, extra=3, can_delete=False)

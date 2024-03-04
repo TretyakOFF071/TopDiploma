@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-01 21:58+0500\n"
+"POT-Creation-Date: 2024-03-04 16:07+0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,160 +46,164 @@ msgstr "Confirm password"
 msgid "Дата рождения"
 msgstr "Birthdate"
 
-#: .\app_store\forms.py:38 .\app_store\forms.py:87
+#: .\app_store\forms.py:38 .\app_store\forms.py:90
 msgid "Номер телефона"
 msgstr "Phone number"
 
-#: .\app_store\forms.py:51
+#: .\app_store\forms.py:39
+msgid "Должность"
+msgstr "Position"
+
+#: .\app_store\forms.py:54
 msgid "Название товара"
 msgstr "Good name"
 
-#: .\app_store\forms.py:52 .\app_store\templates\app_store\good_detail.html:21
+#: .\app_store\forms.py:55 .\app_store\templates\app_store\good_detail.html:21
 #: .\app_store\templates\app_store\goods_list.html:65
 msgid "Артикул"
 msgstr "Part number"
 
-#: .\app_store\forms.py:53 .\app_store\templates\app_store\good_detail.html:22
+#: .\app_store\forms.py:56 .\app_store\templates\app_store\good_detail.html:22
 #: .\app_store\templates\app_store\goods_list.html:66
 msgid "Категория"
 msgstr "Category"
 
-#: .\app_store\forms.py:54 .\app_store\templates\app_store\good_detail.html:23
+#: .\app_store\forms.py:57 .\app_store\templates\app_store\good_detail.html:23
 #: .\app_store\templates\app_store\goods_list.html:67
 msgid "Цена продажи"
 msgstr "Selling price"
 
-#: .\app_store\forms.py:55 .\app_store\templates\app_store\good_detail.html:24
+#: .\app_store\forms.py:58 .\app_store\templates\app_store\good_detail.html:24
 #: .\app_store\templates\app_store\goods_list.html:68
 msgid "Закупочная цена"
 msgstr "Purchase price"
 
-#: .\app_store\forms.py:56
+#: .\app_store\forms.py:59
 msgid "Описание товара"
 msgstr "Good description"
 
-#: .\app_store\forms.py:57
+#: .\app_store\forms.py:60
 msgid "Картинка товара"
 msgstr "Good image"
 
-#: .\app_store\forms.py:58 .\app_store\templates\app_store\goods_list.html:72
+#: .\app_store\forms.py:61 .\app_store\templates\app_store\goods_list.html:72
 msgid "Производитель"
 msgstr "Manufacturer"
 
-#: .\app_store\forms.py:85
+#: .\app_store\forms.py:88
 msgid "Название поставщика"
 msgstr "Provider name"
 
-#: .\app_store\forms.py:86
-#: .\app_store\templates\app_store\providers_list.html:47
+#: .\app_store\forms.py:89
+#: .\app_store\templates\app_store\providers_list.html:49
 msgid "Контактное лицо"
 msgstr "Contact person"
 
-#: .\app_store\forms.py:88
+#: .\app_store\forms.py:91
 msgid "Электронная почта"
 msgstr "Email"
 
-#: .\app_store\forms.py:89 .\app_store\templates\app_store\base.html:46
+#: .\app_store\forms.py:92 .\app_store\templates\app_store\base.html:47
 #: .\app_store\templates\app_store\categories_list.html:11
 msgid "Категории товаров"
 msgstr "Goods categories"
 
-#: .\app_store\forms.py:113
+#: .\app_store\forms.py:116
 msgid "Категория товара"
 msgstr "Good category"
 
-#: .\app_store\forms.py:125 .\app_store\templates\app_store\good_detail.html:28
+#: .\app_store\forms.py:128 .\app_store\templates\app_store\good_detail.html:28
 #: .\app_store\templates\app_store\good_detail.html:47
 msgid "Поставщик"
 msgstr "Provider"
 
-#: .\app_store\forms.py:137 .\app_store\forms.py:173
+#: .\app_store\forms.py:140 .\app_store\forms.py:176
 #: .\app_store\templates\app_store\supply_list.html:19
 msgid "Товар"
 msgstr "Good"
 
-#: .\app_store\forms.py:138
+#: .\app_store\forms.py:141
 msgid "Количество товаров"
 msgstr "Good quantity"
 
-#: .\app_store\forms.py:154 .\app_store\templates\app_store\sales_list.html:21
+#: .\app_store\forms.py:157 .\app_store\templates\app_store\sales_list.html:21
 msgid "Скидка"
 msgstr "Discount"
 
-#: .\app_store\forms.py:155 .\app_store\templates\app_store\sales_list.html:22
+#: .\app_store\forms.py:158 .\app_store\templates\app_store\sales_list.html:22
 msgid "Способ оплаты"
 msgstr "Payment method"
 
-#: .\app_store\forms.py:174 .\app_store\templates\app_store\good_detail.html:48
+#: .\app_store\forms.py:177 .\app_store\templates\app_store\good_detail.html:48
 #: .\app_store\templates\app_store\good_detail.html:64
 #: .\app_store\templates\app_store\goods_list.html:70
 #: .\app_store\templates\app_store\supply_list.html:20
 msgid "Количество"
 msgstr "Quantity"
 
-#: .\app_store\templates\app_store\base.html:23
+#: .\app_store\templates\app_store\base.html:24
 msgid "Продажи"
 msgstr "Sales"
 
-#: .\app_store\templates\app_store\base.html:26
+#: .\app_store\templates\app_store\base.html:27
 #: .\app_store\templates\app_store\sales_list.html:6
 msgid "Список продаж"
 msgstr "Sales list"
 
-#: .\app_store\templates\app_store\base.html:27
+#: .\app_store\templates\app_store\base.html:28
 #: .\app_store\templates\app_store\create_sale.html:17
 msgid "Создание продажи"
 msgstr "Create sale"
 
-#: .\app_store\templates\app_store\base.html:32
+#: .\app_store\templates\app_store\base.html:33
 msgid "Поставки"
 msgstr "Supplies"
 
-#: .\app_store\templates\app_store\base.html:35
+#: .\app_store\templates\app_store\base.html:36
 #: .\app_store\templates\app_store\providers_list.html:12
 msgid "Список поставщиков"
 msgstr "Providers list"
 
-#: .\app_store\templates\app_store\base.html:36
+#: .\app_store\templates\app_store\base.html:37
 #: .\app_store\templates\app_store\create_supply.html:8
 msgid "Создание поставки"
 msgstr "Create supply"
 
-#: .\app_store\templates\app_store\base.html:37
+#: .\app_store\templates\app_store\base.html:38
 #: .\app_store\templates\app_store\supply_list.html:6
 msgid "Список поставок"
 msgstr "Supplies list"
 
-#: .\app_store\templates\app_store\base.html:42
+#: .\app_store\templates\app_store\base.html:43
 #: .\app_store\templates\app_store\sales_list.html:24
 msgid "Товары"
 msgstr "Goods"
 
-#: .\app_store\templates\app_store\base.html:45
+#: .\app_store\templates\app_store\base.html:46
 #: .\app_store\templates\app_store\goods_list.html:12
 msgid "Список товаров"
 msgstr "Goods list"
 
-#: .\app_store\templates\app_store\base.html:55
+#: .\app_store\templates\app_store\base.html:56
 #: .\app_store\templates\app_store\goods_list.html:73
-#: .\app_store\templates\app_store\providers_list.html:51
+#: .\app_store\templates\app_store\providers_list.html:53
 msgid "Действия"
 msgstr "Actions"
 
-#: .\app_store\templates\app_store\base.html:58
+#: .\app_store\templates\app_store\base.html:59
 msgid "Профиль"
 msgstr "Profile"
 
-#: .\app_store\templates\app_store\base.html:59
+#: .\app_store\templates\app_store\base.html:60
 msgid "Выйти"
 msgstr "Log out"
 
-#: .\app_store\templates\app_store\base.html:82
+#: .\app_store\templates\app_store\base.html:83
 #: .\app_store\templates\app_store\login.html:25
 msgid "Войти"
 msgstr "Log in"
 
-#: .\app_store\templates\app_store\base.html:83
+#: .\app_store\templates\app_store\base.html:84
 #: .\app_store\templates\app_store\register.html:24
 msgid "Регистрация"
 msgstr "Registration"
@@ -209,7 +213,7 @@ msgid "Добавить новую категорию"
 msgstr "Add new category"
 
 #: .\app_store\templates\app_store\categories_list.html:21
-#: .\app_store\templates\app_store\providers_list.html:128
+#: .\app_store\templates\app_store\providers_list.html:130
 msgid "Добавить"
 msgstr "Add"
 
@@ -298,9 +302,9 @@ msgid "Поставка"
 msgstr "Supply"
 
 #: .\app_store\templates\app_store\good_detail.html:52
-#: .\app_store\templates\app_store\providers_list.html:79
-msgid "Нет поставщиков"
-msgstr "No providers"
+#: .\app_store\templates\app_store\supply_list.html:33
+msgid "Нет поставок"
+msgstr "No supplies"
 
 #: .\app_store\templates\app_store\good_detail.html:57
 msgid "Последние 3 продажи товара"
@@ -360,7 +364,7 @@ msgid "Добавить товар"
 msgstr "Add good"
 
 #: .\app_store\templates\app_store\goods_list.html:64
-#: .\app_store\templates\app_store\providers_list.html:46
+#: .\app_store\templates\app_store\providers_list.html:48
 msgid "Название"
 msgstr "Name"
 
@@ -385,7 +389,7 @@ msgid "Создать новый товар"
 msgstr "Create new good"
 
 #: .\app_store\templates\app_store\goods_list.html:174
-#: .\app_store\templates\app_store\providers_list.html:127
+#: .\app_store\templates\app_store\providers_list.html:129
 msgid "Закрыть"
 msgstr "Close"
 
@@ -398,18 +402,22 @@ msgid "Личный кабинет"
 msgstr "Personal account"
 
 #: .\app_store\templates\app_store\profile.html:15
-#: .\app_store\templates\app_store\providers_list.html:48
+#: .\app_store\templates\app_store\providers_list.html:50
 msgid "Телефон"
 msgstr "Phone"
 
-#: .\app_store\templates\app_store\providers_list.html:40
-#: .\app_store\templates\app_store\providers_list.html:96
+#: .\app_store\templates\app_store\providers_list.html:42
+#: .\app_store\templates\app_store\providers_list.html:98
 msgid "Добавить поставщика"
 msgstr "Add provider"
 
-#: .\app_store\templates\app_store\providers_list.html:50
+#: .\app_store\templates\app_store\providers_list.html:52
 msgid "Категории"
 msgstr "Categories"
+
+#: .\app_store\templates\app_store\providers_list.html:81
+msgid "Нет поставщиков"
+msgstr "No providers"
 
 #: .\app_store\templates\app_store\register.html:61
 msgid "Зарегистрироваться"
@@ -438,7 +446,3 @@ msgstr "Purchase price"
 #: .\app_store\templates\app_store\supply_list.html:26
 msgid "Общая закупочная стоимость товаров"
 msgstr "Goods total purchase price"
-
-#: .\app_store\templates\app_store\supply_list.html:33
-msgid "Нет поставок"
-msgstr "No supplies"
