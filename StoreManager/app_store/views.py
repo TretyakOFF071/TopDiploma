@@ -1,5 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.db.models import Sum, F
 from django.http import JsonResponse
@@ -7,14 +9,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from django.core.cache import cache
+
 from .forms import UserForm, ProfileForm, GoodForm, ProviderForm, GoodCategoryForm, SupplyForm, \
     SaleForm, SupplyGoodFormSet, SaleItemFormSet
 from .models import Profile, Provider, Good, GoodCategory, Supply, Sale
-from .serializers import ProviderSerializer, GoodSerializer
+
 
 
 
@@ -27,10 +26,12 @@ def register_view(request):
             user = user_form.save()
             birthday = profile_form.cleaned_data['birthday']
             phone = profile_form.cleaned_data['phone']
+            position = profile_form.cleaned_data['position']
             profile = Profile.objects.create(
                 user=user,
                 birthday=birthday,
                 phone=phone,
+                position=position
             )
             profile.save()
 
@@ -71,80 +72,13 @@ class CustomLogoutView(LogoutView):
     template_name = 'app_store/logout.html'
     next_page = 'register'
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request):
         profile = get_object_or_404(Profile, user=request.user)
         return render(request, 'app_store/profile.html', {'profile': profile})
 
 
-# ------------------------------------API----------------------------------------------------------------------------
-CACHE_TIME = 60 * 60 * 2
-
-class ProviderAPIView(APIView):
-
-    def get(self, request):
-        data = cache.get_or_set('providers_list', Provider.objects.all(), CACHE_TIME)
-        return JsonResponse(ProviderSerializer(data, many=True).data, safe=False)
-
-    def post(self, request):
-        serializer = ProviderSerializer(data=request.data)
-        if serializer.is_valid():
-            cache.delete('providers_list')
-            serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ProviderDetailAPI(APIView):
-
-    def get(self, request, pk):
-        provider = get_object_or_404(Provider, pk=pk)
-        data = cache.get_or_set(f'provider_{pk}', provider, CACHE_TIME)
-        return JsonResponse(ProviderSerializer(data).data, safe=False)
-
-    def put(self, request, pk):
-        provider = get_object_or_404(Provider, pk=pk)
-        serializer = ProviderSerializer(provider, data=request.data)
-        if serializer.is_valid():
-            cache.delete(f'provider_{pk}')
-            serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class GoodAPIView(APIView):
-
-    def get(self, request):
-        data = cache.get_or_set('goods_list', Good.objects.all(), CACHE_TIME)
-        return JsonResponse(GoodSerializer(data, many=True).data, safe=False)
-
-    def post(self, request):
-        serializer = GoodSerializer(data=request.data)
-        if serializer.is_valid():
-            cache.delete('goods_list')
-            serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class GoodDetailAPI(APIView):
-
-    def get(self, request, pk):
-        good = get_object_or_404(Good, pk=pk)
-        data = cache.get_or_set(f'good_{pk}', good, CACHE_TIME)
-        return JsonResponse(GoodSerializer(data).data, safe=False)
-
-    def put(self, request, pk):
-        good = get_object_or_404(Good, pk=pk)
-        serializer = GoodSerializer(good, data=request.data)
-        if serializer.is_valid():
-            cache.delete(f'good_{pk}')
-            serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# ---------------------------------------------------Views--------------------------------------------------------------
-
-class ProviderListView(View):
+class ProviderListView(LoginRequiredMixin, View):
     def get(self, request):
         providers = Provider.objects.all()
         categories = GoodCategory.objects.all()
@@ -184,12 +118,14 @@ class ProviderListView(View):
                 'categories': categories,
             })
 
+@login_required
 def delete_provider(request, provider_id):
     provider = get_object_or_404(Provider, pk=provider_id)
     if request.method == 'POST':
         provider.delete()
     return redirect('providers_list')
 
+@login_required
 def edit_provider(request, provider_id):
     provider = get_object_or_404(Provider, pk=provider_id)
     if request.method == 'POST':
@@ -202,7 +138,7 @@ def edit_provider(request, provider_id):
     return render(request, 'app_store/edit_provider.html', {'form': form, 'provider': provider})
 
 
-class GoodCategoryListView(View):
+class GoodCategoryListView(LoginRequiredMixin, View):
     def get(self, request):
         categories = GoodCategory.objects.all()
         form = GoodCategoryForm()
@@ -217,6 +153,7 @@ class GoodCategoryListView(View):
             categories = GoodCategory.objects.all()
             return render(request, 'app_store/categories_list.html', {'categories': categories, 'form': form})
 
+@login_required
 def delete_category(request, category_id):
     category = get_object_or_404(GoodCategory, pk=category_id)
     if request.method == 'POST':
@@ -224,7 +161,7 @@ def delete_category(request, category_id):
     return redirect('categories_list')
 
 
-class GoodsListView(View):
+class GoodsListView(LoginRequiredMixin, View):
     def get(self, request):
         goods = Good.objects.all()
         categories = GoodCategory.objects.all()
@@ -276,12 +213,14 @@ class GoodsListView(View):
                 'categories': categories,
             })
 
+@login_required
 def delete_good(request, good_id):
     good = get_object_or_404(Good, pk=good_id)
     if request.method == 'POST':
         good.delete()
     return redirect('goods_list')
 
+@login_required
 def edit_good(request, good_id):
     good = get_object_or_404(Good, pk=good_id)
     if request.method == 'POST':
@@ -293,7 +232,7 @@ def edit_good(request, good_id):
         form = GoodForm(instance=good)
     return render(request, 'app_store/edit_good.html', {'form': form, 'good': good})
 
-class GoodDetailView(DetailView):
+class GoodDetailView(LoginRequiredMixin ,DetailView):
     model = Good
     template_name = 'app_store/good_detail.html'
     context_object_name = 'good'
@@ -305,6 +244,7 @@ class GoodDetailView(DetailView):
         return context
 
 
+@login_required
 def create_supply(request):
     if request.method == 'POST':
         supply_form = SupplyForm(request.POST)
@@ -321,14 +261,14 @@ def create_supply(request):
         supply_good_formset = SupplyGoodFormSet()
     return render(request, 'app_store/create_supply.html', {'supply_form': supply_form, 'supply_good_formset': supply_good_formset})
 
-class SupplyListView(ListView):
+class SupplyListView(LoginRequiredMixin, ListView):
     model = Supply
     template_name = 'app_store/supply_list.html'
     context_object_name = 'supplies'
 
 
 
-class CreateSaleView(View):
+class CreateSaleView(LoginRequiredMixin, View):
     template_name = 'app_store/create_sale.html'
 
     def get(self, request):
@@ -345,7 +285,6 @@ class CreateSaleView(View):
                 quantity = form.cleaned_data.get('quantity')
                 if good and good.quantity < quantity:
                     messages.error(request, f"Недостаточно товара '{good.name}' в наличии для продажи")
-                    # Создаем новый экземпляр SaleItemFormSet без данных
                     empty_formset = SaleItemFormSet()
                     return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': empty_formset})
             sale = sale_form.save()
@@ -357,7 +296,7 @@ class CreateSaleView(View):
         else:
             return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': sale_item_formset})
 
-class GetGoodPriceView(View):
+class GetGoodPriceView(LoginRequiredMixin, View):
     def get(self, request, good_id):
         try:
             good = Good.objects.get(id=good_id)
@@ -366,7 +305,7 @@ class GetGoodPriceView(View):
             return JsonResponse({'error': 'Товар не найден'}, status=404)
 
 
-class SalesListView(ListView):
+class SalesListView(LoginRequiredMixin, ListView):
     model = Sale
     template_name = 'app_store/sales_list.html'
     context_object_name = 'sales'
@@ -381,7 +320,6 @@ class SalesListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Вычисление общей суммы со всех продаж
         total_sum = self.get_queryset().aggregate(total_sum=Sum('final_cost'))['total_sum']
         context['total_sum'] = total_sum
         return context

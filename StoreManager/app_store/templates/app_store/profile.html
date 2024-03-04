@@ -4,15 +4,16 @@
 
 {% block content %}
   <div class="container my-5">
-    <div class="card">
+    <div style="background-color: #113f67;" class="card">
       <div class="card-header">
-        <h1>{% trans "Личный кабинет" %}</h1>
+        <h1 style="color: #e7eaf6">{% trans "Личный кабинет" %}</h1>
       </div>
-      <div class="card-body">
-        <p class="card-text">{% trans "Имя пользователя" %}: {{ user.username }}</p>
-        <p class="card-text">Email: {{ user.email }}</p>
-        <p class="card-text">{% trans "Дата рождения" %}: {{ user.profile.birthday }}</p>
-        <p class="card-text">{% trans "Телефон" %}: {{ user.profile.phone }}</p>
+      <div style="background-color: #6F94D2" class="card-body">
+        <p class="card-text"><b>{% trans "Имя пользователя" %}</b>: {{ user.username }}</p>
+        <p class="card-text"><b>Email:</b> {{ user.email }}</p>
+        <p class="card-text"><b>{% trans "Дата рождения" %}:</b> {{ user.profile.birthday }}</p>
+        <p class="card-text"><b>{% trans "Телефон" %}:</b> {{ user.profile.phone }}</p>
+        <p class="card-text"><b>{% trans "Должность" %}:</b> {{ user.profile.position }}</p>
       </div>
     </div>
   </div>

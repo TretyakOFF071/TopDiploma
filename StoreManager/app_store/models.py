@@ -7,6 +7,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='пользователь')
     birthday = models.DateField(verbose_name='дата рождения')
     phone = models.CharField(max_length=11)
+    position = models.CharField(max_length=30, verbose_name='должность')
 
     def __str__(self):
         return f'{self.user.email}'
