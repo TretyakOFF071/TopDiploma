@@ -17,7 +17,7 @@ background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1)
 {% block header %}
     <header class="header">
         <div class="d-flex justify-content-around mb-3">
-            <h1 style="font-family: Brush Script MT, cursive" ><a class="headerText" href="#">Store</a></h1>
+            <h1 style="font-family: Brush Script MT, cursive; color: white;">Store</h1>
                 <div class="linksDiv">
                     <div class="linkItem dropdown">
                         <a class="headerText dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,7 +52,7 @@ background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1)
                 {% if request.user.is_authenticated %}
 
             <div class="dropdown">
-              <button class="btn btn-light dropdown-toggle btnAct" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-light dropdown-toggle btnAct mb-4" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 {% trans "Действия" %}
               </button>
               <ul class="dropdown-menu">
