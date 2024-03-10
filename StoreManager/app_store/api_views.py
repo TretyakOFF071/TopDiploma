@@ -5,9 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.core.cache import cache
 
-from .models import Provider, Good
-from .serializers import ProviderSerializer, GoodSerializer
-
+from .models import Provider, Good, Sale
+from .serializers import ProviderSerializer, GoodSerializer, SaleSerializer
 
 CACHE_TIME = 60 * 60 * 2
 
@@ -69,6 +68,22 @@ class GoodDetailAPI(APIView):
         serializer = GoodSerializer(good, data=request.data)
         if serializer.is_valid():
             cache.delete(f'good_{pk}')
+            serializer.save()
+            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SaleDetailAPI(APIView):
+
+    def get(self, request, pk):
+        sale = get_object_or_404(Sale, pk=pk)
+        data = cache.get_or_set(f'sale_{pk}', sale, CACHE_TIME)
+        return JsonResponse(SaleSerializer(data).data, safe=False)
+
+    def put(self, request, pk):
+        sale = get_object_or_404(Sale, pk=pk)
+        serializer = SaleSerializer(sale, data=request.data)
+        if serializer.is_valid():
+            cache.delete(f'sale_{pk}')
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

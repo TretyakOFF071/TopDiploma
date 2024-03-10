@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import GoodCategory, Provider, Good
+from .models import GoodCategory, Provider, Good, Sale
 
 
 class ProviderSerializer(ModelSerializer):
@@ -18,4 +18,9 @@ class GoodCategorySerializer(ModelSerializer):
 class GoodSerializer(ModelSerializer):
     class Meta:
         model = Good
+        fields = '__all__'
+
+class SaleSerializer(ModelSerializer):
+    class Meta:
+        model = Sale
         fields = '__all__'
