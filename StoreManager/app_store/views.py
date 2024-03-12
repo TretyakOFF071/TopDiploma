@@ -63,8 +63,17 @@ class CustomLoginView(LoginView):
     template_name = 'app_store/login.html'
     next_page = 'profile'
 
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+
+        form = super().get_form(form_class)
+        form.fields['username'].widget.attrs.update({'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'})
+        form.fields['password'].widget.attrs.update({'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'})
+        return form
+
     def form_valid(self, form):
-        response = super(CustomLoginView, self).form_valid(form)
+        response = super().form_valid(form)
         return response
 
 
@@ -244,22 +253,28 @@ class GoodDetailView(LoginRequiredMixin ,DetailView):
         return context
 
 
-@login_required
-def create_supply(request):
-    if request.method == 'POST':
-        supply_form = SupplyForm(request.POST)
-        supply_good_formset = SupplyGoodFormSet(request.POST)
-        if supply_form.is_valid() and supply_good_formset.is_valid():
-            supply = supply_form.save()
-            instances = supply_good_formset.save(commit=False)
+class CreateSupplyView(View):
+    form_class = SupplyForm
+    formset_class = SupplyGoodFormSet
+    template_name = 'app_store/create_supply.html'
+
+    def get(self, request):
+        form = self.form_class()
+        formset = self.formset_class()
+        return render(request, self.template_name, {'supply_form': form, 'supply_good_formset': formset})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        formset = self.formset_class(request.POST)
+        if form.is_valid() and formset.is_valid():
+            supply = form.save()
+            instances = formset.save(commit=False)
             for instance in instances:
                 instance.supply = supply
                 instance.save()
             return redirect('supply_list')
-    else:
-        supply_form = SupplyForm()
-        supply_good_formset = SupplyGoodFormSet()
-    return render(request, 'app_store/create_supply.html', {'supply_form': supply_form, 'supply_good_formset': supply_good_formset})
+        else:
+            return render(request, self.template_name, {'supply_form': form, 'supply_good_formset': formset})
 
 class SupplyListView(LoginRequiredMixin, ListView):
     model = Supply

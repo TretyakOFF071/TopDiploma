@@ -9,11 +9,13 @@
         <h1 style="color: #e7eaf6">{% trans "Личный кабинет" %}</h1>
       </div>
       <div style="background-color: #6F94D2" class="card-body">
-        <p class="card-text"><b>{% trans "Имя пользователя" %}</b>: {{ user.username }}</p>
-        <p class="card-text"><b>Email:</b> {{ user.email }}</p>
-        <p class="card-text"><b>{% trans "Дата рождения" %}:</b> {{ user.profile.birthday }}</p>
-        <p class="card-text"><b>{% trans "Телефон" %}:</b> {{ user.profile.phone }}</p>
-        <p class="card-text"><b>{% trans "Должность" %}:</b> {{ user.profile.position }}</p>
+        <div style="padding: 20px; background-color: #e7eaf6; border-radius: 10px;">
+          <p class="card-text"><b>{% trans "Имя пользователя" %}</b>: {{ user.username }}</p>
+          <p class="card-text"><b>Email:</b> {{ user.email }}</p>
+          <p class="card-text"><b>{% trans "Дата рождения" %}:</b> {{ user.profile.birthday }}</p>
+          <p class="card-text"><b>{% trans "Телефон" %}:</b> {{ user.profile.phone }}</p>
+          <p class="card-text"><b>{% trans "Должность" %}:</b> {{ user.profile.position }}</p>
+        </div>
       </div>
     </div>
   </div>
