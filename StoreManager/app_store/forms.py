@@ -9,6 +9,17 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UserForm(UserCreationForm):
+    password1 = forms.CharField(
+        label=_("Пароль"),
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+    )
+    password2 = forms.CharField(
+        label=_("Подтверждение пароля"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
+        strip=False,
+    )
+
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2')
@@ -17,17 +28,15 @@ class UserForm(UserCreationForm):
             'first_name': _('Имя'),
             'last_name': _('Фамилия'),
             'email': _('Email'),
-            'password1': _('Пароль'),
-            'password2': _('Подтверждение пароля'),
         }
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
-            'password1': forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
-            'password2': forms.PasswordInput(attrs={'class': 'form-control', 'style': 'width: 250px; margin: 0 auto;'}),
         }
+
+
 class ProfileForm(forms.ModelForm):
 
     class Meta:

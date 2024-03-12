@@ -1,7 +1,7 @@
 $(document).ready(function() {
   var totalPrice = 0;
 
-  // Добавляем обработчик для добавления новых форм
+  // обработчик для добавления новых форм
   $('#add-item').click(function() {
     var formCount = parseInt($('[name="form-TOTAL_FORMS"]').val());
     $('[name="form-TOTAL_FORMS"]').val(formCount + 1);
@@ -9,12 +9,12 @@ $(document).ready(function() {
     updateTotalPrice();
   });
 
-  // Добавляем обработчик изменения для поля количества товара
+  // обработчик изменения для поля количества товара
   $(document).on('change keyup', '.sale-item-form input[name*="quantity"]', function() {
     updateTotalPrice();
   });
 
-  // Добавляем обработчик изменения для поля товара
+  // обработчик изменения для поля товара
   $(document).on('change', '.sale-item-form select[name*="good"]', function() {
     var goodId = $(this).val();
     var priceDisplay = $(this).closest('.sale-item-form').find('.price-display');
@@ -26,7 +26,7 @@ $(document).ready(function() {
         var priceText = 'Цена за единицу: <strong>' + data.price.toFixed(2) + '</strong> RUB.';
         priceDisplay.html(priceText);
 
-        // Обновляем общую сумму
+        // Обновление общей суммы
         var quantity = parseInt(quantityInput.val()) || 0;
         totalPrice += data.price * quantity;
         updateTotalPriceDisplay();
@@ -64,7 +64,7 @@ $(document).ready(function() {
     $('#discounted-price-display').html('<h4>Общая сумма с учетом скидки: ' + discountedTotalPrice.toFixed(2) + ' RUB</h4>');
   }
 
-  // Добавляем обработчик изменения для поля скидки
+  // обработчик изменения для поля скидки
   $(document).on('change keyup', 'input[name="discount"]', function() {
     updateDiscountedPriceDisplay();
   });

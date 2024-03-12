@@ -30,7 +30,7 @@
         </div>
       </div>
       <div style="background-color: #113f67;" class="card-footer custom-footer">
-        <a href="{% url 'goods_list' %}" class="btn btn-light custom-button">{% trans "Назад к списку товаров" %}</a>
+        <a href="{% url 'goods_list' %}" class="btn btn-light btnAct">{% trans "Назад к списку товаров" %}</a>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
                 </div>
                 <div style="background-color: #e7eaf6;" class="card-body">
                     <p class="card-title">{% trans "Количество" %}: <strong>{{ sale.quantity }} шт.</strong></p>
-                    <p class="card-text">{% trans "Сумма продажи" %}: <strong>{{ sale.sale.final_cost_with_discount|floatformat:2 }} RUB.</strong></p>
+                    <p class="card-text">{% trans "Общая сумма чека" %}: <strong>{{ sale.sale.final_cost_with_discount|floatformat:2 }} RUB.</strong></p>
                 </div>
             </div>
             {% empty %}
