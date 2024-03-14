@@ -111,7 +111,7 @@ class Supply(models.Model):
             supply_good.good.new_supply(supply_good.quantity)
             supply_good.good.save()
 
-    def total_cost(self):
+    def supply_total_cost(self):
         return sum(good.total_cost() for good in self.supplygood_set.all())
 
 class SupplyGood(models.Model):
@@ -126,6 +126,7 @@ class SupplyGood(models.Model):
     def total_cost(self):
         return self.good.purchase_price * self.quantity
 
+
 class Sale(models.Model):
     goods = models.ManyToManyField('Good', through='SaleItem')
     sale_date = models.DateTimeField(auto_now_add=True, verbose_name='дата продажи')
@@ -133,22 +134,23 @@ class Sale(models.Model):
     payment_method = models.CharField(max_length=50, default='Наличные', choices=[('Наличные', 'Наличные'), ('Карта', 'Карта')], verbose_name='способ оплаты')
     final_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='итоговая стоимость', default=0)
 
-    def total_cost(self):
+    def sale_total_cost(self):
         return sum(item.total_cost() for item in self.saleitem_set.all())
 
     def final_cost_with_discount(self):
-        return self.total_cost() * (1 - self.discount / 100)
+        return self.sale_total_cost() * (1 - self.discount / 100)
 
     def save(self, *args, **kwargs):
         self.final_cost = self.final_cost_with_discount()
         super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'Продажа от {self.sale_date}'
+
     class Meta:
         db_table = 'sales'
         verbose_name = 'продажа'
         verbose_name_plural = 'продажи'
-
-    def __str__(self):
-        return f'Продажа от {self.sale_date}'
 
 
 
@@ -170,3 +172,4 @@ class SaleItem(models.Model):
 
     def __str__(self):
         return f'{self.good.name} ({self.quantity} шт.)'
+
