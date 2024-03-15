@@ -53,7 +53,7 @@ class Provider(models.Model):
 
 class Good(models.Model):
 
-    name = models.CharField(max_length=25, db_index=True,
+    name = models.CharField(max_length=30, db_index=True,
                             verbose_name='название товара')
     part_number = models.CharField(max_length=10, verbose_name='артикул', default='')
     category = models.ForeignKey(GoodCategory, on_delete=models.CASCADE,

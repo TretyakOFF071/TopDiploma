@@ -2,11 +2,11 @@
 {% load i18n %}
 
 {% block content %}
+<h1 class="ms-5">{% trans "Список поставок" %}</h1>
 <div class="container mt-4">
-    <h1>{% trans "Список поставок" %}</h1>
     <div class="row">
         {% for supply in supplies %}
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-3">
             <div class="card h-100">
                 <div class="card-header" style="background-color: #113f67; color: #e7eaf6;">
                     <h4 class="card-title">{% trans "Поставка" %} №{{ supply.id }}</h4>
@@ -15,16 +15,17 @@
                     <h5 class="card-subtitle mb-2 text-muted">{% trans "Дата поставки" %}: {{ supply.supply_date }}</h5>
                     <ul class="list-group list-group-flush">
                         {% for good in supply.supplygood_set.all %}
-                        <li style="background-color: #e7eaf6;" class="list-group-item">
+                        <li style="background-color: #e7eaf6; border-radius: 10px;" class="list-group-item mb-1">
                             {% trans "Товар" %}: <strong>{{ good.good.name }}</strong><br>
                             {% trans "Количество" %}: <strong>{{ good.quantity }}</strong> <br>
                             {% trans "Закупочная Стоимость" %}: <strong>{{ good.total_cost }} RUB.</strong>
                         </li>
                         {% endfor %}
                     </ul>
-                    <p class="card-text">
-                        {% trans "Общая закупочная стоимость товаров" %}:<strong> {{ supply.total_cost }} RUB.</strong>
-                    </p>
+                </div>
+                <div class="card-footer" style="background-color: #113f67; color: #e7eaf6;">
+                    <h5 class="card-text">{% trans "Общая закупочная стоимость товаров" %}:</h5>
+                    <p class="card-text mb-1"><strong> {{ supply.supply_total_cost }} RUB.</strong></p>
                 </div>
             </div>
         </div>

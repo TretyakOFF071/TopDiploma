@@ -4,30 +4,55 @@
 
 {% block content %}
     <div class="editProviderContainer">
+    <div class="overlay"></div>
+
         <h2>{% trans "Редактировать поставщика" %}</h2>
         <form method="post">
             {% csrf_token %}
           <div class="form-group">
-            <p>{{ form.name.label_tag }}</p>
+            <h5>{{ form.name.label_tag }}</h5>
             <p>{{ form.name }}</p>
           </div>
           <div class="form-group">
-            <p>{{ form.contact_person.label_tag }}</p>
+            <h5>{{ form.contact_person.label_tag }}</h5>
             <p>{{ form.contact_person }}</p>
           </div>
           <div class="form-group">
-            <p>{{ form.phone_number.label_tag }}</p>
+            <h5>{{ form.phone_number.label_tag }}</h5>
             <p>{{ form.phone_number }}</p>
           </div>
           <div class="form-group">
-            <p>{{ form.email.label_tag }}</p>
+            <h5>{{ form.email.label_tag }}</h5>
             <p>{{ form.email }}</p>
           </div>
           <div class="form-group">
-            <p>{{ form.categories.label_tag }}</p>
+            <h5>{{ form.categories.label_tag }}</h5>
             <p>{{ form.categories }}</p>
           </div>
-          <button type="submit" class="btn btn-primary">{% trans "Сохранить" %}</button>
+          <button type="submit" class="btn btn-dark blueBtn">{% trans "Сохранить" %}</button>
         </form>
     </div>
+{% block extra_css %}
+<style>
+    body {
+        position: relative;
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
+
+    .editProviderContainer {
+        position: relative;
+        z-index: 2;
+    }
+</style>
+{% endblock %}
 {% endblock %}
