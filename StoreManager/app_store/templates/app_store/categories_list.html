@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-  <h2>{% trans "Категории товаров" %}</h2>
+  <h1 class="ms-5">{% trans "Категории товаров" %}</h1>
   <div style="display: flex; margin: 0 auto; width: 1000px;">
     <div class="addСategory mt-5">
       <h5>{% trans "Добавить новую категорию" %}</h5>
@@ -22,8 +22,8 @@
       </form>
     </div>
     <div class="smallTableContainer">
-      <table class="table mt-5 table-sm table-primary table-hover table-bordered text-center">
-        <thead>
+      <table class="table mt-5 table-sm table-secondary table-hover table-bordered text-center">
+        <thead class="table-primary">
           <tr>
             <th>{% trans "Название категории" %}</th>
             <th>{% trans "Действие" %}</th>

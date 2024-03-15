@@ -6,12 +6,12 @@
     <div class="editGoodContainer">
     <div class="overlay"></div>
 
-        <h2>{% trans "Редактировать товар" %}</h2>
+        <h3>{% trans "Редактировать товар" %}</h3>
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group mb-1">
-                <h5>{{ form.name.label_tag }}
+                <h5>{{ form.name.label_tag }}</h5>
                 {{ form.name }}
             </div>
             <div class="form-group mb-1">
@@ -42,7 +42,7 @@
                 <h5>{{ form.manufacturer.label_tag }}</h5>
                 {{ form.manufacturer }}
             </div>
-            <button type="submit" class="btn btn-light">{% trans "Сохранить" %}</button>
+            <button type="submit" class="btn btn-dark blueBtn mb-3">{% trans "Сохранить" %}</button>
         </form>
     </div>
 {% block extra_css %}
@@ -58,13 +58,13 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный цвет */
-        z-index: 1; /* Помещаем затемнение поверх других элементов */
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
     }
 
     .editGoodContainer {
         position: relative;
-        z-index: 2; /* Помещаем див с формой поверх затемнения */
+        z-index: 2;
     }
 </style>
 {% endblock %}

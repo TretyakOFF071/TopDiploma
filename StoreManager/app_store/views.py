@@ -39,7 +39,7 @@ def register_view(request):
             raw_password = user_form.cleaned_data['password1']
             auth_user = authenticate(username=username, password=raw_password)
             login(request, auth_user)
-            return redirect('profile')
+            return redirect('goods_list')
         else:
             for field, errors in user_form.errors.items():
                 for error in errors:
@@ -61,7 +61,7 @@ def register_view(request):
 
 class CustomLoginView(LoginView):
     template_name = 'app_store/login.html'
-    next_page = 'profile'
+    next_page = 'goods_list'
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -79,7 +79,7 @@ class CustomLoginView(LoginView):
 
 class CustomLogoutView(LogoutView):
     template_name = 'app_store/logout.html'
-    next_page = 'register'
+    next_page = 'login'
 
 class ProfileView(LoginRequiredMixin, View):
     def get(self, request):

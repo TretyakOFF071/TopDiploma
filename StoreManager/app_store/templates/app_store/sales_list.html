@@ -3,9 +3,9 @@
 
 
 {% block content %}
-<h1 class="container mb-4">{% trans "Список продаж" %}</h1>
-<div class="container">
-    <h5>{% trans "Сумма всех продаж" %}: {{ total_sum }} RUB.</h5>
+<h1 class="ms-5 mb-4">{% trans "Список продаж" %}</h1>
+<div class="ms-5">
+    <h4>{% trans "Сумма всех продаж" %}: <strong>{{ total_sum }} RUB.</strong></h4>
 </div>
 <div class="container mt-5 mb-4">
     <div class="row row-cols-1 row-cols-md-3 g-3">
@@ -24,13 +24,15 @@
                     <h5>{% trans "Товары" %}:</h5>
                     <ul class="list-group list-group-flush">
                         {% for item in sale.saleitem_set.all %}
-                        <li  style="background-color: #e7eaf6;"  class="list-group-item">
+                        <li  style="background-color: #e7eaf6; border-radius: 10px;"  class="list-group-item mb-1">
                             {{ item.good.name }} - {{ item.quantity }} шт.
                         </li>
                         {% endfor %}
                     </ul>
+                </div>
+                <div class="card-footer" style="background-color: #113f67; color: #e7eaf6;">
                     <h5>{% trans "Финальная стоимость с учетом скидки" %}:</h5>
-                    <p class="card-text"><strong>{{ sale.final_cost|floatformat:2 }} RUB. </strong></p>
+                    <p class="card-text mb-2"><strong>{{ sale.final_cost|floatformat:2 }} RUB. </strong></p>
                 </div>
             </div>
         </div>

@@ -19,11 +19,11 @@
     margin: 0px;
     text-align: center;
     width: 250px;
-    height: 100px;
+    height: 75px;
 }
 .linkItem:hover {
     color: #faa;
-	box-shadow: 0 50px 5px rgba(0, 0, 0, 0.15) inset;
+	box-shadow: 0 75px 5px rgba(0, 0, 0, 0.15) inset;
 	transition: 0.3s linear all;
 }
 
@@ -44,11 +44,12 @@
 }
 .editProviderContainer {
     margin: 0 auto;
+    padding: 10px;
     width: 450px;
     height: 650px;
     border: 1px solid black;
     text-align: center;
-    background-color: #a2a8d3;
+    background-color: #b1cefa;
     border-radius: 10px;
 }
 
@@ -73,9 +74,8 @@ td, th{
 }
 .editGoodContainer{
     margin: 0 auto;
-    margin-top: 50px;
     width: 450px;
-    height: 750px;
+    min-height: 700px;
     border: 1px solid black;
     text-align: center;
     background-color: #b1cefa;
@@ -84,7 +84,7 @@ td, th{
 .addProviderContainer{
     margin: 0 auto;
     width: 450px;
-    height: 600px;
+    min-height: 500px;
     border: 1px solid black;
     text-align: center;
     background-color: #b1cefa;
@@ -177,7 +177,7 @@ td, th{
     background: radial-gradient(circle, rgba(190,217,249,1) 7%, rgba(0,44,106,1) 100%);
     border: 1px solid black;
 }
-.blueBtn:hover, .redBtn:hover, btnAct:hover, btnAdd:hover {
-    transform: scale(1.05);
-}
+.blueBtn:hover, .redBtn:hover, .btnAct:hover, .btnAdd:hover, .btn:hover {
+    transform: scale(1.03);
 
+}

@@ -168,6 +168,7 @@ class SaleForm(forms.ModelForm):
         }
         widgets = {
             'discount': forms.NumberInput(attrs={'class': 'form-control',
+                                                 'step': 1,
                                                  'style': 'width: 250px; margin: 0 auto;', 'min': 0, 'max': 50, 'max_length': 3}),
             'payment_method' : forms.Select(attrs={'class': 'form-select', 'style': 'width: 250px; margin: 0 auto;'}),
         }
