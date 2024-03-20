@@ -58,6 +58,8 @@ background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1)
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" type="button" href="{% url 'profile' %}">{% trans "Профиль" %}</a></li>
                 <li><a class="dropdown-item" href="{% url 'logout' %}">{% trans "Выйти" %}</a></li>
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#apiModal">API List</a>
+                </li>
                 <li role="separator" class="dropdown-divider"></li>
                 <li>
                   <form action="{% url 'set_language' %}" method="post">
@@ -102,6 +104,27 @@ background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1)
             </div>
         </div>
     </header>
+
+    <div class="modal fade" id="apiModal" tabindex="-1" aria-labelledby="apiModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div style="background-color: #113f67;" class="modal-content">
+                <div class="modal-header">
+                    <h5 style="color: white;" class="modal-title" id="apiModalLabel">API List</h5>
+                </div>
+                <div style="background: rgb(194,203,214);
+background: radial-gradient(circle, rgba(194,203,214,1) 54%, rgba(129,143,167,1) 100%);" class="modal-body">
+                    <ul>
+                        <li><a style="text-decoration: none; color: #113f67;" href="{% url 'api_providers_list' %}"><strong>Providers API</strong></a></li>
+                        <li><a style="text-decoration: none; color: #113f67;" href="{% url 'api_goods_list' %}"><strong>Goods API</strong></a></li>
+                        <li><a style="text-decoration: none; color: #113f67;" href="{% url 'api_sales_list' %}"><strong>Sales API</strong></a></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light redBtn" data-bs-dismiss="modal">X</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}

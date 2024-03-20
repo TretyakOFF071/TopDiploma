@@ -267,14 +267,20 @@ class CreateSupplyView(View):
         form = self.form_class(request.POST)
         formset = self.formset_class(request.POST)
         if form.is_valid() and formset.is_valid():
-            supply = form.save()
-            instances = formset.save(commit=False)
-            for instance in instances:
-                instance.supply = supply
-                instance.save()
-            return redirect('supply_list')
-        else:
-            return render(request, self.template_name, {'supply_form': form, 'supply_good_formset': formset})
+            for form_data in formset.cleaned_data:
+                if form_data and form_data['quantity'] <= 0:
+                    messages.error(request, "Количество должно быть больше 0")
+                    form = self.form_class()
+                    formset = self.formset_class()
+                    break
+            else:
+                supply = form.save()
+                instances = formset.save(commit=False)
+                for instance in instances:
+                    instance.supply = supply
+                    instance.save()
+                return redirect('supply_list')
+        return render(request, self.template_name, {'supply_form': form, 'supply_good_formset': formset})
 
 class SupplyListView(LoginRequiredMixin, ListView):
     model = Supply
@@ -300,6 +306,10 @@ class CreateSaleView(LoginRequiredMixin, View):
                 quantity = form.cleaned_data.get('quantity')
                 if good and good.quantity < quantity:
                     messages.error(request, f"Недостаточно товара '{good.name}' в наличии для продажи")
+                    empty_formset = SaleItemFormSet()
+                    return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': empty_formset})
+                elif good and quantity <= 0:
+                    messages.error(request, f"Количество товара '{good.name}' должно быть больше 0")
                     empty_formset = SaleItemFormSet()
                     return render(request, self.template_name, {'sale_form': sale_form, 'sale_item_formset': empty_formset})
             sale = sale_form.save()
