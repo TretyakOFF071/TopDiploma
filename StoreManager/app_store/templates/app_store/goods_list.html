@@ -46,15 +46,15 @@
                     {% endfor %}
                 </select>
             </div>
-            <button type="submit" class="btn btn-dark mt-2 mb-3 blueBtn">{% trans "Применить" %}</button>
-            <button class="btn btn-dark mt-2 mb-3 redBtn" type="submit" name="clear_filters">{% trans "Очистить" %}</button>
+            <button type="submit" class="btn btn-primary mt-2 mb-3 ">{% trans "Применить" %}</button>
+            <button class="btn btn-danger mt-2 mb-3 " type="submit" name="clear_filters">{% trans "Очистить" %}</button>
         </form>
        </div>
 
 
       <div class="tableContainer">
           <div class="d-grid gap-2 col-6 mx-auto">
-              <button type="button" class="btn btn-light btn-lg mb-2 btnAdd" data-bs-toggle="modal" data-bs-target="#addGoodModal">
+              <button type="button" class="btn btn-primary btn-lg mb-2" data-bs-toggle="modal" data-bs-target="#addGoodModal">
                   {% trans "Добавить товар" %}</button>
           </div>
         <table class="table table-secondary table-hover table-bordered text-center">
@@ -171,8 +171,8 @@
           </div>
         </div>
         <div class="modal-footer d-flex flex-column justify-content-center align-items-center">
-            <button type="button" class="btn btn-dark redBtn" data-bs-dismiss="modal">{% trans "Закрыть" %}</button>
-            <button type="submit" form="add-good-form" class="btn btn-dark blueBtn">{% trans "Добавить товар" %}</button>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">{% trans "Закрыть" %}</button>
+            <button type="submit" form="add-good-form" class="btn btn-primary">{% trans "Добавить товар" %}</button>
         </div>
       </div>
     </div>
