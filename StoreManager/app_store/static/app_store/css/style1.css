@@ -152,32 +152,3 @@ td, th{
     display: none;
 }
 
-.blueBtn{
-    background: rgb(153,165,255);
-    background: radial-gradient(circle, rgba(153,165,255,1) 0%, rgba(1,8,133,1) 100%);
-    border: 1px solid black;
-    color: black;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
-.redBtn{
-    background: rgb(255,153,153);
-    background: radial-gradient(circle, rgba(255,153,153,1) 0%, rgba(133,1,1,1) 100%);
-    border: 1px solid black;
-    color: black;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-}
-.btnAct{
-    background: rgb(153,195,255);
-    background: radial-gradient(circle, rgba(153,195,255,1) 36%, rgba(92,133,255,1) 100%);
-    border: 1px solid black;
-    color: black;
-}
-.btnAdd{
-    background: rgb(190,217,249);
-    background: radial-gradient(circle, rgba(190,217,249,1) 7%, rgba(0,44,106,1) 100%);
-    border: 1px solid black;
-}
-.blueBtn:hover, .redBtn:hover, .btnAct:hover, .btnAdd:hover, .btn:hover {
-    transform: scale(1.03);
-
-}

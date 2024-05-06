@@ -18,7 +18,7 @@
           <h6>{{ form.name.label_tag }}</h6>
           {{ form.name }}
         </div>
-        <button type="submit"  class="btn btn-dark mt-3 blueBtn">{% trans "Добавить" %}</button>
+        <button type="submit"  class="btn btn-primary mt-3">{% trans "Добавить" %}</button>
       </form>
     </div>
     <div class="smallTableContainer">
@@ -36,7 +36,7 @@
               <td>
                 <form method="post" action="{% url 'delete_category' category.id %}" style="display: inline;">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-danger btn-sm redBtn">{% trans "Удалить" %}</button>
+                <button type="submit" class="btn btn-danger btn-sm ">{% trans "Удалить" %}</button>
               </form>
               </td>
             </tr>
